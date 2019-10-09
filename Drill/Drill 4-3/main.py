@@ -21,17 +21,24 @@ class State(Enum):
 def handle_event():
     global cx,cy
     global mx,my
+    global idx
     global targetX,targetY
     global moveFlag
+    global direct, state
     event = p.get_events()
     for e in event:
         if e.type == p.SDL_MOUSEBUTTONDOWN:
-            print("여기들어옴~")
             currentX = cx
             currentY = cy
             targetX = e.x
             targetY = MONITORY - 1 - e.y
             movelist.clear()
+            idx = 0
+            if targetX >= cx:
+                direct = Direct.e_right
+            else:
+                direct = Direct.e_left
+            state =State.e_running
             for i in range(0, 100+1, 2):
                 t = i / 100
                 movelist.append(((1-t)*currentX + t*targetX, (1-t)*currentY + t*targetY))
@@ -63,11 +70,11 @@ while(True):
     if moveFlag:
         cx = movelist[idx][0]
         cy = movelist[idx][1]
-        print(cx, cy)
         idx += 1
         if idx >= 50:
             idx = 0
             moveFlag = False
+            state = State.e_idle
 
     handle_event()
     mouse.draw_now(mx + 25,my -26)
