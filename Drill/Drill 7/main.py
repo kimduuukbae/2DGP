@@ -7,7 +7,7 @@ class ball:
     def __init__(self):
         self.x = random.randint(0,KPU_WIDTH)
         self.y = 599
-        self.speed = random.randint(1, 5)
+        self.speed = random.randint(3, 5)
         if random.randint(0,2) == 0:
             self.image = load_image('ball21x21.png')
             self.imageSize = 21
@@ -35,6 +35,14 @@ class boy:
         self.frame = (self.frame + 1) % 8
         self.x += self.speed
 
+class grass:
+    def __init__(self):
+        self.x = 400
+        self.y = 90
+        self.image = load_image('grass.png')
+    def draw(self,x,y):
+        self.image.draw(x, y)
+
 def handle_events():
     global running
     events=get_events()
@@ -44,14 +52,14 @@ def handle_events():
         elif event.type ==SDL_KEYDOWN and event.key==SDLK_ESCAPE:
             running=False
 
-grass = load_image('grass.png')
 running = True
 
 ballList = [ball() for i in range(20)]
 boyList = [boy() for i in range(10)]
+mygrass = grass()
 while (running):
     handle_events()
-    grass.draw(400,90)
+    mygrass.draw(400,90)
     for i in range(0,20):
         ballList[i].draw()
         ballList[i].update()
