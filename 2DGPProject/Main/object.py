@@ -1,14 +1,17 @@
 import pico2d
 
 class object:
-    def __init__(self, imageString):
-        self.image = pico2d.load_image(imageString)
+    def __init__(self, imageString = None):
+        self.image = None
+        if imageString is not None:
+            self.image = pico2d.load_image(imageString)
+            self.imageWidth = self.image.w
+            self.imageHeight = self.image.h
         self.x = 0
         self.y = 0
-        self.w = 0
-        self.h = 0
-        self.sw = self.image.w
-        self.sh = self.image.h
+        self.clipWidth = 0
+        self.clipHeight = 0
+
         self.rad = 0
         self.rotateFlag = True
         self.left = 0
@@ -16,23 +19,30 @@ class object:
     def update(self):
         pass
     def draw(self):
-        self.image.draw(self.x, self.y, self.sw, self.sh)
+        self.image.draw(self.x, self.y, self.imageWidth, self.imageHeight)
     def clip_draw(self):
-        self.image.clip_draw(self.left,self.bottom,self.w, self.h, self.x, self.y, self.sw, self.sh)
+        self.image.clip_draw(self.left,self.bottom,self.clipWidth, self.clipHeight, self.x, self.y, self.imageWidth, self.imageHeight)
     def rotate_draw(self):
-        self.image.rotate_draw(self.rad, self.x, self.y, self.sw, self.sh)
+        self.image.rotate_draw(self.rad, self.x, self.y, self.imageWidth, self.imageHeight)
     def setPos(self, x, y):
         self.x = x
         self.y = y
     def setSize(self, w, h):
-        self.sw = w
-        self.sh = h
+        self.imageWidth = w
+        self.imageHeight = h
     def setClipSize(self, w, h):
-        self.w = w
-        self.h = h
+        self.clipWidth = w
+        self.clipHeight = h
     def setRotateFlag(self, flag):
         self.rotateFlag = flag
     def changeClipFrame(self, left, bottom):
         self.left = left
         self.bottom = bottom
+    def setImage(self, imageString):
+        if self.image is not None:
+            del self.image
+        self.image = pico2d.load_image(imageString)
+        self.imageWidth = self.image.w
+        self.imageHeight = self.image.h
+
 

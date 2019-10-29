@@ -36,14 +36,14 @@ class button(o.object):
         self.origin = origin
         self.future = future
     def overlapButton(self, x, y):
-        if self.x - self.sw / 2 < x and self.x + self.sw /2 > x and \
-            self.y - self.sh / 2 < y and self.y + self.sh /2 > y:
+        if self.x - self.imageWidth / 2 < x and self.x + self.imageWidth /2 > x and \
+            self.y - self.imageHeight / 2 < y and self.y + self.imageHeight /2 > y:
             self.changeClipFrame(0, self.future)
         else:
             self.bottom = self.origin
     def clickButton(self,x,y):
-        if self.x - self.sw / 2 < x and self.x + self.sw / 2 > x and \
-                self.y - self.sh / 2 < y and self.y + self.sh / 2 > y:
+        if self.x - self.imageWidth / 2 < x and self.x + self.imageWidth / 2 > x and \
+                self.y - self.imageHeight / 2 < y and self.y + self.imageHeight / 2 > y:
             return True
         else:
             return False
