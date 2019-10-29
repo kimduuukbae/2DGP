@@ -7,6 +7,7 @@ import main_state
 name = "TitleState"
 background = None
 char = None
+title = None
 oList = []
 
 class Dice(o.object):
@@ -48,8 +49,9 @@ class button(o.object):
             return False
 
 def enter():
-    global background,char
+    global background,char,title
     background = o.object('../Resources/intro/background.png')
+    title = o.object('../Resources/intro/introLogo.png')
     char = o.object('../Resources/intro/char.png')
     oList.append(Dice('../Resources/intro/dice1.png'))
     oList.append(Dice( '../Resources/intro/dice2.png'))
@@ -59,6 +61,7 @@ def enter():
     oList.append(button('../Resources/intro/buttonAtlas.png', 450, 150))
     oList.append(button('../Resources/intro/buttonAtlas.png', 300, 0))
     background.setPos(960,540)
+    title.setPos(300,850)
     char.setPos(1300,658)
     oList[0].setPos(600, 512)
     oList[1].setPos(1100, 600)
@@ -103,6 +106,7 @@ def handle_events():
 def draw():
     clear_canvas()
     background.draw()
+    title.draw()
     char.draw()
     for i in range(len(oList)-2):
         oList[i].rotate_draw()

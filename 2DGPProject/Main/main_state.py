@@ -1,8 +1,19 @@
 from pico2d import *
 import game_framework
-import random
+import object as o
+spriteList = []
 
 def enter():
+    global spriteList
+    spriteList.append(o.object('../Resources/stage/stageArea.png'))
+    spriteList.append(o.object('../Resources/stage/uiShader.png'))
+    spriteList.append(o.object('../Resources/stage/character_Icon.png'))
+    spriteList.append(o.object('../Resources/stage/character.png'))
+    spriteList[0].setPos(960,540)
+    spriteList[1].setPos(960,100)
+    spriteList[2].setPos(100,100)
+    spriteList[3].setPos(450, 600)
+    spriteList[3].setSize(260,150)
     pass
 
 def exit():
@@ -22,4 +33,6 @@ def update():
 
 def draw():
     clear_canvas()
+    for i in spriteList:
+        i.draw()
     update_canvas()
