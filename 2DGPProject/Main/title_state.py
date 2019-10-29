@@ -3,6 +3,7 @@ import object as o
 import random as r
 import game_framework
 import main_state
+import winsound
 
 name = "TitleState"
 background = None
@@ -75,6 +76,8 @@ def enter():
     oList[6].setPos(1600, 100)
     oList[6].setSize(400, 100)
     oList[6].setClipSize(608, 150)
+    winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
+                       winsound.SND_LOOP | winsound.SND_ASYNC)
 def exit():
     global background,char
     del background
