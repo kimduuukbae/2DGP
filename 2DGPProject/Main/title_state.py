@@ -12,6 +12,7 @@ title = None
 oList = []
 
 class Dice(o.object):
+    image = None
     def __init__(self, imageString):
         o.object.__init__(self, imageString)
         self.dir = r.randint(0,1)

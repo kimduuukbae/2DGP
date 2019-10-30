@@ -44,5 +44,9 @@ class object:
         self.image = pico2d.load_image(imageString)
         self.imageWidth = self.image.w
         self.imageHeight = self.image.h
+    def setRad(self, rad):
+        self.rad = rad
+    def getPos(self):
+        return self.x, self.y
 
 
