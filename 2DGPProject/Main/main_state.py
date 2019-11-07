@@ -46,7 +46,7 @@ def enter():
         if x1 >= x2:
             x1 -= 125
         else:
-            x1 += 125  
+            x1 += 125
         if y1 >= y2:
             y1 -= 125
         else:
