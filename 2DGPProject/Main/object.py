@@ -50,10 +50,37 @@ class object:
         return self.x, self.y
 
 class hero(object):
-    def __init__(self):
-        super().__init__(None)
+    def __init__(self, imageString = None):
+        super().__init__(imageString)
         self.id = 0
+        self.moveFlag = False
+
+        self.toX = 0
+        self.toY = 0
+
+        self.distanceX = 0
+        self.distanceY = 0
+
+        self.count = 0
     def update(self):
-        pass
+        if self.moveFlag:
+            self.x += self.distanceX
+            self.y += self.distanceY
+            self.count += 1
+            if self.count == 100:
+                self.count = 0
+                self.moveFlag = False
+
+    def moveTo(self, toX, toY, toId):
+        if not self.moveFlag:
+            self.id = toId
+            self.toX = toX
+            self.toY = toY
+            self.distanceX = (self.toX - self.x) / 100
+            self.distanceY = (self.toY - self.y) / 100
+            self.moveFlag = True
+
+    def getMoving(self):
+        return self.moveFlag
 
 

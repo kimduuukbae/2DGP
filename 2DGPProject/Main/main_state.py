@@ -8,7 +8,7 @@ bridgeList = None
 character = None
 def enter():
     global character, mapList, bridgeList
-    character = o.object('../Resources/stage/character.png')
+    character = o.hero('../Resources/stage/character.png')
     spriteList.append(o.object('../Resources/stage/stageArea.png'))
     spriteList.append(o.object('../Resources/stage/uiShader.png'))
     spriteList.append(o.object('../Resources/stage/character_Icon.png'))
@@ -34,7 +34,8 @@ def handle_events():
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
-                print(moveMap(mapList, 1, 2))
+                x,y,id = moveMap(mapList, 1, 2)[0]
+                character.moveTo(x,y,id)
             if event.type == SDL_MOUSEMOTION:
                 x = event.x
                 y = 1080 - 1 - event.y
@@ -43,7 +44,7 @@ def handle_events():
 
 
 def update():
-    pass
+    character.update()
 
 def draw():
     clear_canvas()
