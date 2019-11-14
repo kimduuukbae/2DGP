@@ -49,4 +49,11 @@ class object:
     def getPos(self):
         return self.x, self.y
 
+class hero(object):
+    def __init__(self):
+        super().__init__(None)
+        self.id = 0
+    def update(self):
+        pass
+
 
