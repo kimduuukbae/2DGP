@@ -2,10 +2,13 @@ from pico2d import *
 import game_framework
 import object as o
 from mapTile import *
+from Monster import *
+
 spriteList = []
 mapList = None
 bridgeList = None
 character = None
+collisionObjectList = []
 def enter():
     global character, mapList, bridgeList
     character = o.hero('../Resources/stage/character.png')
@@ -15,7 +18,8 @@ def enter():
     spriteList[0].setPos(960,540)
     spriteList[1].setPos(960,100)
     spriteList[2].setPos(100,100)
-
+    collisionObjectList.append(fireman())
+    collisionObjectList[0].setPos(550,850)
     mapList, bridgeList = makeMap()
     character.setPos(300,600)
     character.setPivot(20,50)
@@ -58,6 +62,9 @@ def handle_events():
 
 def update():
     character.update()
+    for i in collisionObjectList:
+        i.update()
+
 
 def draw():
     clear_canvas()
@@ -67,6 +74,8 @@ def draw():
         i.rotate_draw()
     for i in mapList:
         i.clip_draw()
+    for i in collisionObjectList:
+        i.draw()
 
     character.draw()
     update_canvas()
