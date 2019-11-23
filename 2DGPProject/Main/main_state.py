@@ -17,7 +17,8 @@ def enter():
     spriteList[2].setPos(100,100)
 
     mapList, bridgeList = makeMap()
-    character.setPos(320,650)
+    character.setPos(300,600)
+    character.setPivot(20,50)
     character.setSize(260,150)
 def exit():
     global character
@@ -34,8 +35,20 @@ def handle_events():
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
-                x,y,id = moveMap(mapList, 1, 2)[0]
-                character.moveTo(x,y,id)
+                x = event.x
+                y = 1080 - 1 - event.y
+                for i in mapList:
+                    if i.clickTile(x,y):
+                        cleanMapList()
+                        tileX, tileY, tileId = i.getInfo()
+                        if tileId == character.getHeroId():
+                            break
+                        for j in mapList:
+                            j.setVisit(False)
+                        if checkMap(character.getHeroId(), tileId):
+                            insertMap(mapList, character.getHeroId(), tileId)
+                            character.moveTo(getMapList())
+                        break
             if event.type == SDL_MOUSEMOTION:
                 x = event.x
                 y = 1080 - 1 - event.y

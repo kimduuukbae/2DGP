@@ -16,10 +16,14 @@ class object:
         self.rotateFlag = True
         self.left = 0
         self.bottom = 0
+
+        self.pivotX = 0
+        self.pivotY = 0
+        self.moveLists = []
     def update(self):
         pass
     def draw(self):
-        self.image.draw(self.x, self.y, self.imageWidth, self.imageHeight)
+        self.image.draw(self.x + self.pivotX, self.y + self.pivotY, self.imageWidth, self.imageHeight)
     def clip_draw(self):
         self.image.clip_draw(self.left,self.bottom,self.clipWidth, self.clipHeight, self.x, self.y, self.imageWidth, self.imageHeight)
     def rotate_draw(self):
@@ -27,6 +31,9 @@ class object:
     def setPos(self, x, y):
         self.x = x
         self.y = y
+    def setPivot(self, x, y):
+        self.pivotX = x
+        self.pivotY = y
     def setSize(self, w, h):
         self.imageWidth = w
         self.imageHeight = h
@@ -52,7 +59,7 @@ class object:
 class hero(object):
     def __init__(self, imageString = None):
         super().__init__(imageString)
-        self.id = 0
+        self.id = 1
         self.moveFlag = False
 
         self.toX = 0
@@ -70,12 +77,18 @@ class hero(object):
             if self.count == 100:
                 self.count = 0
                 self.moveFlag = False
+                self.moveLists.pop(0)
+                if len(self.moveLists):
+                    self.moveTo(self.moveLists)
 
-    def moveTo(self, toX, toY, toId):
+    def getHeroId(self):
+        return self.id
+    def moveTo(self,list):
         if not self.moveFlag:
-            self.id = toId
-            self.toX = toX
-            self.toY = toY
+            self.moveLists = list
+            self.id = self.moveLists[0][2]
+            self.toX = self.moveLists[0][0]
+            self.toY = self.moveLists[0][1]
             self.distanceX = (self.toX - self.x) / 100
             self.distanceY = (self.toY - self.y) / 100
             self.moveFlag = True

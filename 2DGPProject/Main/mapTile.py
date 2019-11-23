@@ -11,8 +11,14 @@ class mapTile(object):
         self.origin = 0
         self.future = 0
         self.connect = []
+        self.visit = False
     def getInfo(self):
         return self.x,self.y,self.id
+    def clickTile(self,x,y):
+        if self.x - self.imageWidth / 2 < x and self.x + self.imageWidth / 2 > x and \
+                self.y - self.imageHeight / 2 < y and self.y + self.imageHeight / 2 > y:
+            return True
+        return False
     def overlapTile(self,x,y):
         if self.x - self.imageWidth / 2 < x and self.x + self.imageWidth / 2 > x and \
                 self.y - self.imageHeight / 2 < y and self.y + self.imageHeight / 2 > y:
@@ -21,6 +27,8 @@ class mapTile(object):
             self.bottom = self.origin
     def setConnect(self, x, y, id):
         self.connect.append((x,y,id))
+    def getConnect(self):
+        return self.connect
     def setFrame(self, origin, future):
         self.origin = origin
         self.future = future
@@ -30,7 +38,10 @@ class mapTile(object):
     def clip_draw(self):
         mapTile.image.clip_draw(self.left, self.bottom, self.clipWidth, self.clipHeight, self.x, self.y, self.imageWidth,\
                              self.imageHeight)
-
+    def getVisit(self):
+        return self.visit
+    def setVisit(self, flag):
+        self.visit = flag
 class mapBridge(object):
     image = None
     def __init__(self):
@@ -74,6 +85,7 @@ def makeMap():
         x1, y1, id1 = mapList[startID - 1].getInfo()
         x2, y2, id2 = mapList[endID - 1].getInfo()
         mapList[startID-1].setConnect(x2,y2,id2)
+        mapList[endID-1].setConnect(x1,y1,id1)
         rad = math.atan2(y2 - y1, x2 - x1)
         bridgeList[idx].setRad(rad)
         if x1 >= x2:
@@ -87,14 +99,33 @@ def makeMap():
         bridgeList[idx].setPos(x1, y1)
         idx += 1
     return mapList, bridgeList
-def moveMap(list, nowid, moveid):  # 리스트들과 현재 캐릭터, 갈 위치 id 를 받음
-    returnlist = []
-    x,y,id = list[nowid-1].getInfo()
-    if id == moveid-1:
-        returnlist.append((list[moveid-1].getInfo()))
-    return returnlist
+def checkMap(nowid, moveid):
+    if nowid == moveid:
+        return False
+    return True
+returnlists = []
+def insertMap(list, nowid, moveid):  # 리스트들과 현재 캐릭터, 갈 위치 id 를 받음
+    if list[nowid-1].getVisit():
+        return False
+    conn = list[nowid - 1].getConnect()
 
 
+    list[nowid-1].setVisit(True)
+    if nowid == moveid:
+        returnlists.append(list[nowid - 1].getInfo())
+        return True
+    for i in conn:
+        if insertMap(list, i[2], moveid) is True:
+            returnlists.append(list[nowid - 1].getInfo())
+            return True
+
+
+def cleanMapList():
+    returnlists.clear()
+def getMapList():
+    returnlists.pop()
+    returnlists.reverse()
+    return returnlists
 
 if __name__ == "__name__":
     print("Module")
