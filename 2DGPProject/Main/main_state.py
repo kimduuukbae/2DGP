@@ -3,18 +3,26 @@ import game_framework
 import object as o
 from mapTile import *
 from Monster import *
+from banner import *
 
 spriteList = []
 mapList = None
 bridgeList = None
 character = None
 collisionObjectList = []
+def collisionHeroVsObject(heroObj, colObj):
+    if heroObj.getHeroId() == colObj.getId() and \
+    not heroObj.getBattle() and not colObj.getBattle():
+        colObj.setBattle(True)
+        heroObj.setBattle(True)
+
 def enter():
     global character, mapList, bridgeList
     character = o.hero('../Resources/stage/character.png')
     spriteList.append(o.object('../Resources/stage/stageArea.png'))
     spriteList.append(o.object('../Resources/stage/uiShader.png'))
     spriteList.append(o.object('../Resources/stage/character_Icon.png'))
+    spriteList.append(WinBanner())
     spriteList[0].setPos(960,540)
     spriteList[1].setPos(960,100)
     spriteList[2].setPos(100,100)
@@ -41,6 +49,8 @@ def handle_events():
             if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
                 x = event.x
                 y = 1080 - 1 - event.y
+                if character.getMoving() or character.getBattle():
+                    pass
                 for i in mapList:
                     if i.clickTile(x,y):
                         cleanMapList()
@@ -64,6 +74,8 @@ def update():
     character.update()
     for i in collisionObjectList:
         i.update()
+        collisionHeroVsObject(character, i)
+    spriteList[len(spriteList)-1].update()
 
 
 def draw():

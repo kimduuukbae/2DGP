@@ -69,13 +69,31 @@ class hero(object):
         self.distanceY = 0
 
         self.count = 0
+
+        self.battle = False
+        self.battleEffectFlag = False
+        self.battleEffectSize = -1
     def update(self):
+        if self.battle:
+            if not self.battleEffectFlag:
+                self.x -= 3
+                self.battleEffectSize -= 2
+                if self.battleEffectSize < -100:
+                    self.battleEffectSize = -1
+                    self.battleEffectFlag = True
+            else:
+                self.x += 2
+                self.battleEffectSize -= 2
+                if self.battleEffectSize < -20:
+                    self.battleEffectFlag = False
+                    self.battle = False
         if self.moveFlag:
             self.x += self.distanceX
             self.y += self.distanceY
             self.count += 1
             if self.count == 100:
                 self.count = 0
+                self.id = self.moveLists[0][2]
                 self.moveFlag = False
                 self.moveLists.pop(0)
                 if len(self.moveLists):
@@ -86,7 +104,6 @@ class hero(object):
     def moveTo(self,list):
         if not self.moveFlag:
             self.moveLists = list
-            self.id = self.moveLists[0][2]
             self.toX = self.moveLists[0][0]
             self.toY = self.moveLists[0][1]
             self.distanceX = (self.toX - self.x) / 100
@@ -95,5 +112,10 @@ class hero(object):
 
     def getMoving(self):
         return self.moveFlag
+    def getBattle(self):
+        return self.battle
+    def setBattle(self, flag):
+        self.battle = flag
+
 
 
