@@ -1,0 +1,1 @@
+monster_TYPE = {"FIREMAN" : 1,}

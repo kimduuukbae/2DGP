@@ -1,5 +1,6 @@
 from pico2d import *
 import game_framework
+import battle_state
 class banner:
     image = None
 
@@ -11,6 +12,9 @@ class banner:
 
         self.pivotX = 0
         self.pivotY = 0
+
+        self.changeTime = 0.0
+        self.changeState = None
     def draw(self):
         banner.image.draw(self.x, self.y, banner.image.w, banner.image.h)
         self.text.draw(self.x, self.y, self.text.w, self.text.h)
@@ -18,11 +22,18 @@ class banner:
                                 self.clipSportY, self.x + self.pivotX, self.y + self.pivotY, self.imageWidth, self.imageHeight)
     def update(self):
         self.time += game_framework.frame_time
-        if self.time > 0.09:
+        if self.time > 0.1:
             self.time = 0.0
             self.frame = (self.frame+1)%2
         if self.y > 600:
             self.y -= 10
+        else:
+            self.changeTime += game_framework.frame_time
+            if self.changeTime > 2.0:
+                self.change_scene()
+                self.changeTime = 0.0
+    def change_scene(self):
+        pass
 
 class WinBanner(banner):
     def __init__(self):
@@ -39,7 +50,8 @@ class WinBanner(banner):
 
         self.time = 0.0
 
-
+    def change_scene(self):
+        game_framework.pop_state()
 
 class BattleBanner(banner):
     def __init__(self):
@@ -56,3 +68,5 @@ class BattleBanner(banner):
         self.pivotX  = 10
         self.pivotY = 0
         self.time = 0.0
+    def change_scene(self):
+        game_framework.push_state(battle_state)

@@ -1,16 +1,17 @@
-from pico2d import *
-import game_framework
 import object as o
 from mapTile import *
-from Monster import *
+from monster_in_menu import *
 from banner import *
+import fadescene
+from main_state_spritelist import *
 
-spriteList = []
 mapList = None
 bridgeList = None
 character = None
 collisionObjectList = []
 bannerList = []
+fadeObj = None
+spriteList = None
 def collisionHeroVsObject(heroObj, colObj):
     if heroObj.getHeroId() == colObj.getId() and \
     not heroObj.getBattle() and not colObj.getBattle():
@@ -18,20 +19,16 @@ def collisionHeroVsObject(heroObj, colObj):
         heroObj.setBattle(True)
 
 def enter():
-    global character, mapList, bridgeList
+    global character, mapList, bridgeList, fadeObj, spriteList
     character = o.hero('../Resources/stage/character.png')
-    spriteList.append(o.object('../Resources/stage/stageArea.png'))
-    spriteList.append(o.object('../Resources/stage/uiShader.png'))
-    spriteList.append(o.object('../Resources/stage/character_Icon.png'))
-    spriteList[0].setPos(960,540)
-    spriteList[1].setPos(960,100)
-    spriteList[2].setPos(100,100)
+    spriteList = main_state_spritelist()
     collisionObjectList.append(fireman())
     collisionObjectList[0].setPos(550,850)
     mapList, bridgeList = makeMap()
     character.setPos(300,600)
     character.setPivot(20,50)
     character.setSize(260,150)
+    fadeObj = fadescene.fade()
 def exit():
     global character
     del character
@@ -77,10 +74,10 @@ def update():
         collisionHeroVsObject(character, i)
     for i in bannerList:
         i.update()
+    fadeObj.update()
 def draw():
     clear_canvas()
-    for i in range(len(spriteList)):
-        spriteList[i].draw()
+    spriteList.draw()
     for i in bridgeList:
         i.rotate_draw()
     for i in mapList:
@@ -90,4 +87,11 @@ def draw():
     character.draw()
     for i in bannerList:
         i.draw()
+    fadeObj.draw()
     update_canvas()
+
+def pause():
+    pass
+
+def resume():
+    pass

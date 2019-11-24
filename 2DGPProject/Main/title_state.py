@@ -4,11 +4,13 @@ import random as r
 import game_framework
 import main_state
 import winsound
+import fadescene
 
 name = "TitleState"
 background = None
 char = None
 title = None
+fadeObj = None
 oList = []
 
 class Dice(o.object):
@@ -51,7 +53,7 @@ class button(o.object):
             return False
 
 def enter():
-    global background,char,title
+    global background,char,title, fadeObj
     background = o.object('../Resources/intro/background.png')
     title = o.object('../Resources/intro/introLogo.png')
     char = o.object('../Resources/intro/char.png')
@@ -79,6 +81,8 @@ def enter():
     oList[6].setClipSize(608, 150)
     winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                        winsound.SND_LOOP | winsound.SND_ASYNC)
+
+    fadeObj = fadescene.fade()
 def exit():
     global background,char
     del background
@@ -102,7 +106,7 @@ def handle_events():
                 x = event.x
                 y = 1080 - 1 - event.y
                 if oList[5].clickButton(x, y) is True:
-                    game_framework.change_state(main_state)
+                    fadeObj.changeScene(main_state)
                     break
                 if oList[6].clickButton(x, y) is True:
                     game_framework.quit()
@@ -117,7 +121,8 @@ def draw():
         oList[i].update()
     oList[5].clip_draw()
     oList[6].clip_draw()
+    fadeObj.draw()
     update_canvas()
 
 def update():
-    pass
+    fadeObj.update()
