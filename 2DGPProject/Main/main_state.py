@@ -4,6 +4,7 @@ from monster_in_menu import *
 from banner import *
 import fadescene
 from main_state_spritelist import *
+import winsound
 
 mapList = None
 bridgeList = None
@@ -100,4 +101,6 @@ def resume():
     character.addX(131)
     fadeObj.setFirst()
     bannerList.pop()
+    winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
+                       winsound.SND_LOOP | winsound.SND_ASYNC)
     pass
