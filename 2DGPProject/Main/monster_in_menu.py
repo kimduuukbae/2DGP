@@ -15,12 +15,14 @@ class Monster_In_Menu(object):
         self.battleOnce = False
         self.battleEffectFlag = False
         self.battleEffectSize = -1
+        self.live = True
         pass
     def getMonsterType(self):
         return self.type
     def draw(self):
-        self.image.clip_draw(self.clipWidth*self.frame, 0, self.clipWidth, self.clipHeight,
-                             self.x + self.pivotX, self.y + self.pivotY, self.imageWidth, self.imageHeight)
+        if self.live:
+            self.image.clip_draw(self.clipWidth*self.frame, 0, self.clipWidth, self.clipHeight,
+                             self.x + self.pivotX, self.y + self.pivotY, self.imageWidth/2, self.imageHeight)
     def update(self):
         if self.battle:
             if not self.battleEffectFlag:
@@ -40,7 +42,7 @@ class Monster_In_Menu(object):
                        winsound.SND_ASYNC)
         self.frameTime += game_framework.frame_time
         if self.frameTime > 1.0:
-            self.frame = (self.frame + 1)%2
+            self.frame = (self.frame + 1) % 2
             self.frameTime = 0.0
 
     def getBattle(self):
@@ -48,11 +50,13 @@ class Monster_In_Menu(object):
     def setBattle(self, flag):
         self.battleOnce = flag
         self.battle = flag
+    def setLive(self, flag):
+        self.live = flag
 
-class fireman(Monster_In_Menu):
+class slime(Monster_In_Menu):
     def __init__(self):
-        super().__init__("FIREMAN")
-        self.image = pico2d.load_image("../Resources/stage/firemanStage.png")
+        super().__init__("SLIME")
+        self.image = pico2d.load_image("../Resources/stage/slimeStage.png")
         self.imageWidth = self.image.w
         self.imageHeight = self.image.h
         self.clipWidth = self.imageWidth // 2

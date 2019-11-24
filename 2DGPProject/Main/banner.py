@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
 import battle_state
+import main_state
 class banner:
     image = None
 
@@ -69,4 +70,4 @@ class BattleBanner(banner):
         self.pivotY = 0
         self.time = 0.0
     def change_scene(self):
-        game_framework.push_state(battle_state)
+        main_state.fadeObj.push_state(battle_state)

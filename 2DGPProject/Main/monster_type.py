@@ -1,1 +1,1 @@
-monster_TYPE = {"FIREMAN" : 1,}
+monster_TYPE = {"SLIME" : 1,}

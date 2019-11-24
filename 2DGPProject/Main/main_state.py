@@ -22,7 +22,7 @@ def enter():
     global character, mapList, bridgeList, fadeObj, spriteList
     character = o.hero('../Resources/stage/character.png')
     spriteList = main_state_spritelist()
-    collisionObjectList.append(fireman())
+    collisionObjectList.append(slime())
     collisionObjectList[0].setPos(550,850)
     mapList, bridgeList = makeMap()
     character.setPos(300,600)
@@ -91,7 +91,13 @@ def draw():
     update_canvas()
 
 def pause():
+    for i in range(len(collisionObjectList)):
+        if collisionObjectList[i].getBattle():
+            collisionObjectList.pop(i)
     pass
 
 def resume():
+    character.addX(131)
+    fadeObj.setFirst()
+    bannerList.pop()
     pass

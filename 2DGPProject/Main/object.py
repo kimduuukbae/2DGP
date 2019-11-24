@@ -116,6 +116,8 @@ class hero(object):
         return self.battle
     def setBattle(self, flag):
         self.battle = flag
+    def addX(self, value):
+        self.x += value
 
 
 
