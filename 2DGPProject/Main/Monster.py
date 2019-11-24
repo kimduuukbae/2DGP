@@ -1,6 +1,9 @@
 import pico2d
 from object import *
 import game_framework
+import main_state
+import banner
+import winsound
 monster_TYPE = {"FIREMAN" : 1,}
 class Monster_In_Menu(object):
     def __init__(self, name):
@@ -32,7 +35,9 @@ class Monster_In_Menu(object):
                 if self.battleEffectSize < -20:
                     self.battleEffectFlag = False
                     self.battle = False
-
+                    main_state.bannerList.append(banner.BattleBanner())
+                    winsound.PlaySound('../Resources/stage/fightfxSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
+                       winsound.SND_ASYNC)
         self.frameTime += game_framework.frame_time
         if self.frameTime > 1.0:
             self.frame = (self.frame + 1)%2

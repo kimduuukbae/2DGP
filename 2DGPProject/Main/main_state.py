@@ -10,6 +10,7 @@ mapList = None
 bridgeList = None
 character = None
 collisionObjectList = []
+bannerList = []
 def collisionHeroVsObject(heroObj, colObj):
     if heroObj.getHeroId() == colObj.getId() and \
     not heroObj.getBattle() and not colObj.getBattle():
@@ -22,7 +23,6 @@ def enter():
     spriteList.append(o.object('../Resources/stage/stageArea.png'))
     spriteList.append(o.object('../Resources/stage/uiShader.png'))
     spriteList.append(o.object('../Resources/stage/character_Icon.png'))
-    spriteList.append(WinBanner())
     spriteList[0].setPos(960,540)
     spriteList[1].setPos(960,100)
     spriteList[2].setPos(100,100)
@@ -75,9 +75,8 @@ def update():
     for i in collisionObjectList:
         i.update()
         collisionHeroVsObject(character, i)
-    spriteList[len(spriteList)-1].update()
-
-
+    for i in bannerList:
+        i.update()
 def draw():
     clear_canvas()
     for i in range(len(spriteList)):
@@ -88,6 +87,7 @@ def draw():
         i.clip_draw()
     for i in collisionObjectList:
         i.draw()
-
     character.draw()
+    for i in bannerList:
+        i.draw()
     update_canvas()
