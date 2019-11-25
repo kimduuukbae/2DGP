@@ -1,10 +1,10 @@
-import object as o
 from mapTile import *
 from monster_in_menu import *
 from banner import *
 import fadescene
 from main_state_spritelist import *
 import winsound
+from hero import *
 
 mapList = None
 bridgeList = None
@@ -21,7 +21,7 @@ def collisionHeroVsObject(heroObj, colObj):
 
 def enter():
     global character, mapList, bridgeList, fadeObj, spriteList
-    character = o.hero('../Resources/stage/character.png')
+    character = hero('../Resources/stage/character.png')
     spriteList = main_state_spritelist()
     collisionObjectList.append(slime())
     collisionObjectList[0].setPos(550,850)
@@ -44,6 +44,8 @@ def handle_events():
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_o):
+                hero_status().addhp(-1)
             if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
                 x = event.x
                 y = 1080 - 1 - event.y

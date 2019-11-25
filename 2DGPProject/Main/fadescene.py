@@ -1,6 +1,7 @@
 import game_framework
 import pico2d
 
+
 class fade:
     image = None
     def __init__(self):

@@ -12,6 +12,7 @@ char = None
 title = None
 fadeObj = None
 oList = []
+font = None
 
 class Dice(o.object):
     image = None
@@ -53,7 +54,7 @@ class button(o.object):
             return False
 
 def enter():
-    global background,char,title, fadeObj
+    global background,char,title, fadeObj, font
     background = o.object('../Resources/intro/background.png')
     title = o.object('../Resources/intro/introLogo.png')
     char = o.object('../Resources/intro/char.png')
@@ -125,4 +126,5 @@ def draw():
     update_canvas()
 
 def update():
+
     fadeObj.update()
