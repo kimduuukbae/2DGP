@@ -10,11 +10,14 @@ class Monster_In_Battle(object):
         self.imageWidth = 0
         self.imageHeight = 0
         self.hp = 0
+        self.pivot = 0
 
     def gethp(self):
         return self.hp
     def getname(self):
         return self.type
+    def getpivot(self):
+        return self.pivot
 
 class slime(Monster_In_Battle):
     def __init__(self):
@@ -27,6 +30,7 @@ class slime(Monster_In_Battle):
         self.x = 1700
         self.y = 800
         self.hp = 10
+        self.pivot = 14.5
         self.info = "슬라임은 기본 공격에 약합니다."
     def update(self):
         self.frameTime += game_framework.frame_time
@@ -47,6 +51,7 @@ def monsterFactory(type):
 class monster_status:
     hp = 0
     maxhp = 0
+    pivot = 0
     backimg = None
     img = None
     name = None
@@ -58,10 +63,13 @@ class monster_status:
         monster_status.hp = obj.gethp()
         monster_status.maxhp = obj.gethp()
         monster_status.name = obj.getname()
+        monster_status.pivot = obj.getpivot()
     def draw(self,x,y):
         monster_status.backimg.draw(x, y)
 
-        monster_status.img.draw(x - int((monster_status.maxhp - monster_status.hp) * 6), y, \
+        monster_status.img.draw(x - int((monster_status.maxhp - monster_status.hp) * monster_status.pivot), y, \
                              monster_status.img.w - (
                                  int((monster_status.img.w / monster_status.maxhp) * (monster_status.maxhp - monster_status.hp))), \
                              monster_status.img.h)
+    def addhp(self,value):
+        monster_status.hp += value

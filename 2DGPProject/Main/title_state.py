@@ -5,7 +5,7 @@ import game_framework
 import main_state
 import winsound
 import fadescene
-
+import dice
 name = "TitleState"
 background = None
 char = None
@@ -54,6 +54,7 @@ class button(o.object):
             return False
 
 def enter():
+    dice.diceimage()
     global background,char,title, fadeObj, font
     background = o.object('../Resources/intro/background.png')
     title = o.object('../Resources/intro/introLogo.png')
@@ -85,9 +86,10 @@ def enter():
 
     fadeObj = fadescene.fade()
 def exit():
-    global background,char
+    global background,char,title
     del background
     del char
+    del title
     oList.clear()
 
 def handle_events():

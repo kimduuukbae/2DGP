@@ -29,14 +29,6 @@ class item:
 
     def active(self):
         pass
-    def collision(self, dice):
-        left_a, bottom_a, right_a, top_a = self.get_box()
-        left_b, bottom_b, right_b, top_b = dice.get_box()
-        if left_a > right_b: return False
-        if right_a < left_b: return False
-        if top_a < bottom_b: return False
-        if bottom_a > top_b: return False
-        return True
     def update(self):
         if self.turnFirst:
             self.x += 25
@@ -51,7 +43,7 @@ class baseattack(item):
         self.itemName = "기본 공격"
         self.itemInfo = "□ 만큼 데미지를 입힌다."
         self.image = pico2d.load_image('../Resources/common/small_blue.png')
-        self.pivotItemName = -50
+        self.pivotItemName = -60
         self.pivotItemInfo = -145
         self.stopX = 400
 class ironshield(item):

@@ -67,7 +67,8 @@ class hero(object):
 
 class hero_status:
     hp = 24
-    maxhp = 24
+    maxhp = 24  # 24 = 6 28 = 5.5 32 = 5
+    pivot = 6
     backimg = None
     img = None
     enemytype = None
@@ -81,11 +82,12 @@ class hero_status:
         hero_status.hp = hp
     def setmaxhp(self, hp):
         hero_status.maxhp = hp
+        hero_status.pivot -= 0.5
     def getmaxhp(self):
         return hero_status.maxhp
     def draw(self,x,y):
         hero_status.backimg.draw(x, y)
-        hero_status.img.draw(x - int((hero_status.maxhp - hero_status.hp) * 6), y,\
+        hero_status.img.draw(x - int((hero_status.maxhp - hero_status.hp) * hero_status.pivot), y,\
                                   hero_status.img.w - (int((hero_status.img.w / hero_status.maxhp) * (hero_status.maxhp - hero_status.hp)) ),\
                                   hero_status.img.h)
     def addhp(self, value):
