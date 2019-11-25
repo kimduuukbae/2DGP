@@ -1,14 +1,12 @@
-import pico2d
 from object import *
 import game_framework
 import main_state
 import banner
 import winsound
-from monster_type import monster_TYPE
 class Monster_In_Menu(object):
     def __init__(self, name):
         super().__init__(None)
-        self.type = monster_TYPE[name]
+        self.type = name
         self.frame = 0
         self.frameTime = 0.0
         self.battle = False
@@ -52,10 +50,12 @@ class Monster_In_Menu(object):
         self.battle = flag
     def setLive(self, flag):
         self.live = flag
+    def getType(self):
+        return self.type
 
 class slime(Monster_In_Menu):
     def __init__(self):
-        super().__init__("SLIME")
+        super().__init__("슬라임")
         self.image = pico2d.load_image("../Resources/stage/slimeStage.png")
         self.imageWidth = self.image.w
         self.imageHeight = self.image.h

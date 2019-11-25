@@ -1,5 +1,3 @@
-from pico2d import *
-import game_framework
 from fadescene import *
 import battle_state_sprite
 from monster_in_battle import *
@@ -7,16 +5,20 @@ import winsound
 from item import *
 fadeObj = None
 sprites = None
-monster = None
-collisionObject = None
+collisionObject = []
+turn = None
+
 def enter():
-    global fadeObj, sprites,monster, collisionObject
+    global fadeObj, sprites, collisionObject, turn
     fadeObj = fade()
     sprites = battle_state_sprite.battle_state_spritelist()
-    monster = slime()
     winsound.PlaySound('../Resources/battle/combat1Sound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                        winsound.SND_LOOP | winsound.SND_ASYNC)
-    collisionObject = ironshield()
+    collisionObject.append(ironshield())
+    collisionObject.append(reloaddice())
+    collisionObject.append(baseattack())
+
+    turn = True # True == character
     pass
 def exit():
     global monster
@@ -36,13 +38,15 @@ def handle_events():
 
 
 def update():
-    monster.update()
+    sprites.update()
+    for i in collisionObject:
+        i.update()
     fadeObj.update()
 
 def draw():
     clear_canvas()
     sprites.draw()
-    monster.draw()
-    collisionObject.draw()
+    for i in collisionObject:
+        i.draw()
     fadeObj.draw()
     update_canvas()

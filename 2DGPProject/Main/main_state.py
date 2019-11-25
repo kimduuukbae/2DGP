@@ -18,6 +18,7 @@ def collisionHeroVsObject(heroObj, colObj):
     not heroObj.getBattle() and not colObj.getBattle():
         colObj.setBattle(True)
         heroObj.setBattle(True)
+        hero_status().setEnemyType(colObj.getType())
 
 def enter():
     global character, mapList, bridgeList, fadeObj, spriteList

@@ -70,11 +70,11 @@ class hero_status:
     maxhp = 24
     backimg = None
     img = None
+    enemytype = None
     def __init__(self):
         if hero_status.backimg == None and hero_status.img == None:
             hero_status.backimg = pico2d.load_image("../Resources/common/hpbarback.png")
             hero_status.img = pico2d.load_image("../Resources/common/hpbar.png")
-        pass
     def gethp(self):
         return hero_status.hp
     def sethp(self, hp):
@@ -90,3 +90,5 @@ class hero_status:
                                   hero_status.img.h)
     def addhp(self, value):
         hero_status.hp += value
+    def setEnemyType(self, type):
+        hero_status.enemytype = type
