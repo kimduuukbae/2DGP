@@ -33,41 +33,75 @@ class dice():
     def __init__(self):
         self.dice, self.count = diceimage().getdice()
         self.x, self.y = 0,0
+        self.used = False
+        self.first = True
+        self.index = 0
     def setPos(self,x, y):
         self.x = x
         self.y = y
     def draw(self):
-        self.dice.draw(self.x, self.y)
+        if not self.used:
+            self.dice.draw(self.x, self.y)
     def get_box(self):
         return self.x - self.dice.w // 2, self.y - self.dice.h // 2, \
                self.x + self.dice.w // 2, self.y + self.dice.h // 2
     def get_count(self):
         return self.count
+    def set_use(self):
+        self.used = True
+    def get_use(self):
+        return self.used
+    def redice(self):
+        del self.dice
+        self.dice, self.count = diceimage().getdice()
+        self.setPos(1000 + (150 * self.index),-500)
+        self.used = False
+        self.first = True
+        pass
+    def update(self):
+        if self.first:
+            self.y += 10
+            if self.y > 100:
+                self.first = False
+    def setindex(self, idx):
+        self.index = idx
 class diceManager:
     def __init__(self, num):
-        self.dicelist = [dice() for i in range(num)]
+        self.dicelist = []
+        for i in range(num):
+            self.dicelist.append(dice())
+            self.dicelist[i].setindex(i)
 
     def draw(self):
         for i in self.dicelist:
             i.draw()
-            x1, y1, x2, y2 = i.get_box()
-            pico2d.draw_rectangle(x1, y1, x2, y2)
-    def setalldicepos(self,x ,y, w):
+    def setalldicepos(self,x , w):
         for i in range(len(self.dicelist)):
-            self.dicelist[i].setPos(x + (i*w), y)
+            self.dicelist[i].setPos(x + (i*w), -500)
 
     def update(self):
-        pass
+        for i in self.dicelist:
+            i.update()
     def collideToObject(self, A):   # A must item
         for i in range(len(self.dicelist)):
-            if collision(A, self.dicelist[i]):
+            if not self.dicelist[i].get_use() and collision(A, self.dicelist[i]):
+                A.active(self.dicelist[i])
                 return True
 
     def collideToMouse(self, mouse):
         for i in range(len(self.dicelist)):
-            if collisionMouse(mouse, self.dicelist[i]):
+            if not self.dicelist[i].get_use() and collisionMouse(mouse, self.dicelist[i]):
                 return i
         return None
     def getdicetoidx(self,idx):
         return self.dicelist[idx]
+    def pushdice(self, num = 1 ,x = 1000, w = 150):
+        leng = len(self.dicelist)
+        for i in range(leng, leng+num):
+            print(i)
+            self.dicelist.append(dice())
+            self.dicelist[i].setindex(i)
+            self.dicelist[i].setPos(x + (i*w), -500)
+    def clear(self):
+        self.dicelist.clear()
 

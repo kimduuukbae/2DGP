@@ -1,0 +1,2 @@
+
+class monster_action:
