@@ -18,8 +18,9 @@ turnbtn = None
 changeturn = False
 changetime = 0.0
 changescene = False
+tempenemytime = 0.0
 def exchangeturn():
-    global turn, changeturn, changetime
+    global turn, changeturn, changetime, tempenemytime
     if not changeturn:
         if turn:
             heroObject.changeturn()
@@ -29,6 +30,7 @@ def exchangeturn():
             herodice.pushdice(2)
             monsterObject.changeturn()
             heroObject.reuse()
+        tempenemytime = 0.0
         changetime = 0.0
         changeturn = True
 def exchangescene():
@@ -70,7 +72,7 @@ def exit():
     pass
 
 def handle_events():
-    global clickflag, clickidx, turn
+    global clickflag, clickidx, turn, tempenemytime
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -82,6 +84,7 @@ def handle_events():
                 fadeObj.pop_state()
             if event.key ==  SDLK_o and turn == False:
                 exchangeturn()
+                tempenemytime = 0.0
         if turn:
             if event.type == SDL_MOUSEMOTION:
                 if clickflag:
@@ -105,7 +108,7 @@ def handle_events():
                 clickflag = False
 
 def update():
-    global changeturn, changetime, turn, changescene
+    global changeturn, changetime, turn, changescene, tempenemytime
     sprites.update()
     if turn:
         herodice.update()
@@ -114,6 +117,9 @@ def update():
             if not clickflag:
                 herodice.collideToObject(i)
     else:
+        tempenemytime += game_framework.frame_time
+        if tempenemytime > 1.0:
+            exchangeturn()
         for i in monsterObject.getlist():
             i.update()
     if sprites.getvictory() and not changescene:

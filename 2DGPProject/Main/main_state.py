@@ -26,6 +26,7 @@ def enter():
     spriteList = main_state_spritelist()
     collisionObjectList.append(slime())
     collisionObjectList[0].setPos(550,850)
+
     mapList, bridgeList = makeMap()
     character.setPos(300,600)
     character.setPivot(20,50)
@@ -106,4 +107,9 @@ def resume():
     bannerList.pop()
     winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                        winsound.SND_LOOP | winsound.SND_ASYNC)
+    spriteList.reset()
+
+    if len(collisionObjectList) == 0:
+        collisionObjectList.append(door())
+        collisionObjectList[-1].setPos(1550, 850)
     pass

@@ -69,6 +69,7 @@ class hero_status:
     hp = 24
     maxhp = 24  # 24 = 6 28 = 5.5 32 = 5
     pivot = 6
+    shield = 0
     backimg = None
     img = None
     enemytype = None
@@ -92,5 +93,7 @@ class hero_status:
                                   hero_status.img.h)
     def addhp(self, value):
         hero_status.hp += value
+    def addshield(self, value):
+        hero_status.shield += value
     def setEnemyType(self, type):
         hero_status.enemytype = type

@@ -2,6 +2,7 @@ from font import *
 import pico2d
 from monster_in_battle import monster_status
 import game_framework
+from hero import *
 class item:
     volX = 30
     volY = 30
@@ -123,6 +124,7 @@ class ironshield(item):
     def active(self, obj):
         self.used = True
         obj.set_use()
+        hero_status().addshield(obj.get_count())
         pass
 class reloaddice(item):
     def __init__(self):

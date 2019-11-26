@@ -23,3 +23,6 @@ class main_state_spritelist:
         self.hero.draw(400,100)
         self.font.draw(250,160,"전사", (255,255,255))
         self.font.draw(355,102,str(self.hero.gethp()) + ' / ' + str(self.hero.getmaxhp()), (255,255,255))
+
+    def reset(self):
+        self.hero.shield = 0

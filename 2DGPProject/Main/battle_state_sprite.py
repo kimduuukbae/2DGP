@@ -30,7 +30,10 @@ class battle_state_spritelist:
 
         self.hero.draw(600,100)
         self.font.draw(450,160,"전사",(255,255,255))
-        self.font.draw(555,102,str(self.hero.gethp()) +' / ' + str(self.hero.getmaxhp()), (255,255,255))
+        if self.hero.shield == 0:
+            self.font.draw(555,102,str(self.hero.gethp()) +' / ' + str(self.hero.getmaxhp()), (255,255,255))
+        else:
+            self.font.draw(535, 102, str(self.hero.gethp()) + ' / ' + str(self.hero.getmaxhp()) + ' + ' + str(self.hero.shield), (255, 255, 150))
 
         self.monster.draw(1400 + self.vertexX,800)
         self.font.draw(1250 + self.vertexX, 860, self.monster.name, (255, 255, 255))
