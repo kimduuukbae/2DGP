@@ -1,6 +1,7 @@
 from hero import *
 from font import *
 from monster_in_battle import *
+import winsound
 import banner
 class battle_state_spritelist:
     stage_image = None
@@ -49,6 +50,8 @@ class battle_state_spritelist:
         if self.victory == 0:
             if self.monster.hp <= 0:
                 self.victory = 1
+                winsound.PlaySound('../Resources/battle/herowinsound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
+                                   winsound.SND_ASYNC)
             elif self.hero.gethp() <= 0:
                 self.victory = 2
 

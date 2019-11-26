@@ -6,13 +6,10 @@ class main_state_spritelist:
         self.hero = hero_status()
         self.font = font()
         self.spriteList = []
-        self.spriteList.append(o.object('../Resources/stage/stageArea.png'))
         self.spriteList.append(o.object('../Resources/stage/uiShader.png'))
         self.spriteList.append(o.object('../Resources/stage/character_Icon.png'))
-
-        self.spriteList[0].setPos(960, 540)
-        self.spriteList[1].setPos(960, 100)
-        self.spriteList[2].setPos(100, 100)
+        self.spriteList[0].setPos(960, 100)
+        self.spriteList[1].setPos(100, 100)
 
     def clear(self):
         self.spriteList.clear()
@@ -26,3 +23,6 @@ class main_state_spritelist:
 
     def reset(self):
         self.hero.shield = 0
+    def addImage(self, string):
+        self.spriteList.insert(0,o.object(string))
+        self.spriteList[0].setPos(960, 540)

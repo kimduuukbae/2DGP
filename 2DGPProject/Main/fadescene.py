@@ -12,19 +12,24 @@ class fade:
         self.startChange = False
         self.first = True
         self.popFlag = False
+        self.cycleFlag = False
         if fade.image == None:
             fade.image = pico2d.load_image("../Resources/fade.png")
     def update(self):
         if self.startChange:
             self.x += 20
             if self.x > 960:
-                if self.popFlag:
-                    game_framework.pop_state()
+                if self.cycleFlag:
+                    self.setFirst()
+                    pass
                 else:
-                    if self.stateFlag:
-                        game_framework.push_state(self.state)
+                    if self.popFlag:
+                        game_framework.pop_state()
                     else:
-                        game_framework.change_state(self.state)
+                        if self.stateFlag:
+                            game_framework.push_state(self.state)
+                        else:
+                            game_framework.change_state(self.state)
                 self.startChange = False
         elif self.first:
             self.x += 20

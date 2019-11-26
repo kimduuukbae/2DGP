@@ -3,6 +3,7 @@ import game_framework
 import main_state
 import banner
 import winsound
+import stage1
 
 class Monster_In_Menu(object):
     def __init__(self, name):
@@ -24,20 +25,24 @@ class Monster_In_Menu(object):
     def update(self):
         if self.battle:
             if not self.battleEffectFlag:
-                self.x += 3
+                if self.type == 1:
+                    self.x += 3
                 self.battleEffectSize -= 2
                 if self.battleEffectSize < -100:
                     self.battleEffectSize = -1
                     self.battleEffectFlag = True
             else:
-                self.x -= 3
-                self.battleEffectSize -= 2
-                if self.battleEffectSize < -20:
-                    self.battleEffectFlag = False
-                    self.battle = False
-                    main_state.bannerList.append(banner.BattleBanner())
-                    winsound.PlaySound('../Resources/stage/fightfxSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
-                       winsound.SND_ASYNC)
+                if self.type == 1:
+                    self.x -= 3
+                    self.battleEffectSize -= 2
+                    if self.battleEffectSize < -20:
+                        self.battleEffectFlag = False
+                        self.battle = False
+                        main_state.bannerList.append(banner.BattleBanner())
+                        winsound.PlaySound('../Resources/stage/fightfxSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
+                               winsound.SND_ASYNC)
+                elif self.type == 2:
+                    main_state.fadeObj.changeScene(stage1)
         self.frameTime += game_framework.frame_time
         if self.frameTime > 1.0:
             self.frame = (self.frame + 1) % 2
@@ -46,8 +51,7 @@ class Monster_In_Menu(object):
     def getBattle(self):
         return self.battleOnce
     def setBattle(self, flag):
-        if self.type == 1:
-            self.battle = flag
+        self.battle = flag
         self.battleOnce = flag
 
     def setLive(self, flag):
@@ -82,6 +86,5 @@ class door(Monster_In_Menu):
         self.type = 2
     def getId(self):
         return self.id
-        pass
 
 

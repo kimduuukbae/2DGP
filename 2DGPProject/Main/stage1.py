@@ -9,8 +9,6 @@ from hero import *
 mapList = None
 bridgeList = None
 character = None
-collisionObjectList = []
-bannerList = []
 fadeObj = None
 spriteList = None
 def collisionHeroVsObject(heroObj, colObj):
@@ -24,11 +22,10 @@ def enter():
     global character, mapList, bridgeList, fadeObj, spriteList
     character = hero('../Resources/stage/character.png')
     spriteList = main_state_spritelist()
-    spriteList.addImage('../Resources/stage/stageArea.png')
-    collisionObjectList.append(slime())
-    collisionObjectList[0].setPos(550,850)
+    spriteList.addImage('../Resources/stage/stage1Area.png')
 
     mapList, bridgeList = makeMap()
+
     character.setPos(300,600)
     character.setPivot(20,50)
     character.setSize(260,150)
@@ -75,11 +72,6 @@ def handle_events():
 
 def update():
     character.update()
-    for i in collisionObjectList:
-        i.update()
-        collisionHeroVsObject(character, i)
-    for i in bannerList:
-        i.update()
     fadeObj.update()
 def draw():
     clear_canvas()
@@ -88,29 +80,12 @@ def draw():
         i.rotate_draw()
     for i in mapList:
         i.clip_draw()
-    for i in collisionObjectList:
-        i.draw()
     character.draw()
-    for i in bannerList:
-        i.draw()
     fadeObj.draw()
     update_canvas()
 
 def pause():
-    for i in range(len(collisionObjectList)):
-        if collisionObjectList[i].getBattle():
-            collisionObjectList.pop(i)
     pass
 
 def resume():
-    character.addX(131)
-    fadeObj.setFirst()
-    bannerList.pop()
-    winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
-                       winsound.SND_LOOP | winsound.SND_ASYNC)
-    spriteList.reset()
-
-    if len(collisionObjectList) == 0:
-        collisionObjectList.append(door())
-        collisionObjectList[-1].setPos(1550, 850)
     pass
