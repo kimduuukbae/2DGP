@@ -2,14 +2,17 @@ from pico2d import *
 import game_framework
 import battle_state
 import main_state
+
 class banner:
     image = None
-
+    background = None
     def __init__(self):
         if banner.image is None:
             banner.image = load_image("../Resources/stage/banner.png")
+        if banner.background == None:
+            banner.background = load_image("../Resources/stage/winbannerbackground.png")
         self.x = 950
-        self.y = 1400
+        self.y = 2000
 
         self.pivotX = 0
         self.pivotY = 0
@@ -17,6 +20,7 @@ class banner:
         self.changeTime = 0.0
         self.changeState = None
     def draw(self):
+        banner.background.draw(960, 540)
         banner.image.draw(self.x, self.y, banner.image.w, banner.image.h)
         self.text.draw(self.x, self.y, self.text.w, self.text.h)
         self.sport.clip_draw(0, self.frame * self.clipSportY, self.clipSportX,
@@ -35,10 +39,16 @@ class banner:
                 self.changeTime = 0.0
     def change_scene(self):
         pass
+    def init(self):
+        self.time = 0
+        self.y = 2000
+        self.changeTime = 0
 
 class WinBanner(banner):
+
     def __init__(self):
         super().__init__()
+
         self.text = load_image("../Resources/stage/winText.png")
         self.sport = load_image("../Resources/stage/winSport.png")
         self.frame = 0
@@ -50,9 +60,10 @@ class WinBanner(banner):
         self.clipSportY = self.sport.h // 2
 
         self.time = 0.0
+        self.pivotX = 10
 
     def change_scene(self):
-        game_framework.pop_state()
+        battle_state.fadeObj.pop_state()
 
 class BattleBanner(banner):
     def __init__(self):

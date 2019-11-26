@@ -37,9 +37,9 @@ class slime(Monster_In_Battle):
         if self.frameTime > 0.2:
             self.frameTime = 0.0
             self.frame = (self.frame + 1)%10
-    def draw(self):
+    def draw(self, x = 0, y = 0):
         self.image.clip_draw(self.frame % 5 * self.imageWidth,(1 - (self.frame // 5)) * self.imageHeight,
-                             self.clipWidth, self.clipHeight, self.x, self.y, self.imageWidth, self.imageHeight)
+                             self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
 
 
 def monsterFactory(type):

@@ -14,6 +14,7 @@ def collisionMouse(mouse, A):
     if mouse[0] > left and mouse[0] < right and mouse[1] > bottom and mouse[1] < top:
         return True
     return False
+
 class diceimage:
     dicelist = None
     def __init__(self):
@@ -93,12 +94,12 @@ class diceManager:
             if not self.dicelist[i].get_use() and collisionMouse(mouse, self.dicelist[i]):
                 return i
         return None
+
     def getdicetoidx(self,idx):
         return self.dicelist[idx]
     def pushdice(self, num = 1 ,x = 1000, w = 150):
         leng = len(self.dicelist)
         for i in range(leng, leng+num):
-            print(i)
             self.dicelist.append(dice())
             self.dicelist[i].setindex(i)
             self.dicelist[i].setPos(x + (i*w), -500)

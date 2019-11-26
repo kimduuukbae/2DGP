@@ -8,34 +8,57 @@ from dice import *
 from button import *
 fadeObj = None
 sprites = None
-collisionObject = []
+heroObject = None
+monsterObject = None
 turn = None
 herodice = None
 clickflag = False
 clickidx = -1
 turnbtn = None
-
+changeturn = False
+changetime = 0.0
+changescene = False
 def exchangeturn():
-    global turn
-    if turn:
-        for i in collisionObject:
-            i.setexitturn()
+    global turn, changeturn, changetime
+    if not changeturn:
+        if turn:
+            heroObject.changeturn()
+            monsterObject.reuse()
+            herodice.clear()
+        else:
+            herodice.pushdice(2)
+            monsterObject.changeturn()
+            heroObject.reuse()
+        changetime = 0.0
+        changeturn = True
+def exchangescene():
+
+    global changeturn, changetime, changescene
+    if not changescene:
+        changeturn = True
+        changetime = 0.0
+        heroObject.changeturn()
+        monsterObject.changeturn()
         herodice.clear()
-    else:
-        herodice.pushdice(2)
-        for i in collisionObject:
-            i.reuse()
-    turn ^= True
+        changescene = True
 
 def enter():
-    global fadeObj, sprites, collisionObject, turn, herodice, turnbtn
+    global fadeObj, sprites, turn, herodice, turnbtn, heroObject, monsterObject
     fadeObj = fade()
     sprites = battle_state_sprite.battle_state_spritelist()
     winsound.PlaySound('../Resources/battle/combat1Sound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                        winsound.SND_LOOP | winsound.SND_ASYNC)
-    collisionObject.append(ironshield())
-    collisionObject.append(reloaddice())
-    collisionObject.append(baseattack())
+
+    heroObject = item_manager("hero")
+    monsterObject = item_manager("monster")
+
+    heroObject.push_item("baseattack")
+    heroObject.push_item("ironshield")
+    heroObject.push_item("reloaddice")
+
+    monsterObject.push_item("poison")
+    monsterObject.push_item("poison")
+    monsterObject.push_item("poison")
 
     turn = True # True == character
     herodice = diceManager(2)
@@ -73,7 +96,6 @@ def handle_events():
                     exchangeturn()
                     break;
                 temp = herodice.collideToMouse((x,y))
-
                 if temp != None:
                     clickflag = True
                     clickidx = temp
@@ -83,24 +105,45 @@ def handle_events():
                 clickflag = False
 
 def update():
+    global changeturn, changetime, turn, changescene
     sprites.update()
-    if herodice:
+    if turn:
         herodice.update()
-    for i in collisionObject:
-        i.update()
-        if not clickflag:
-            herodice.collideToObject(i)
+        for i in heroObject.getlist():
+            i.update()
+            if not clickflag:
+                herodice.collideToObject(i)
+    else:
+        for i in monsterObject.getlist():
+            i.update()
+    if sprites.getvictory() and not changescene:
+        exchangescene()
+    if changeturn:
+        changetime += game_framework.frame_time
+        if changetime > 1.0:
+            if not changescene:
+                turn ^= True
+                changeturn = False
+            else:
+                sprites.setvictory()
+                pass
+
+
     fadeObj.update()
 
 def draw():
-    global turn
+    global turn, changescene
     clear_canvas()
     sprites.draw()
-    for i in collisionObject:
-        i.draw()
+    if turn:
+        if not changescene:
+            turnbtn.draw()
+        heroObject.draw()
+    else:
+        monsterObject.draw()
     if herodice:
         herodice.draw()
-    if turn:
-        turnbtn.draw()
+
+
     fadeObj.draw()
     update_canvas()
