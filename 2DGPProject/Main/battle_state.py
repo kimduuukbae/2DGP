@@ -5,7 +5,6 @@ from item import *
 from dice import *
 from button import *
 
-fade_object = None
 sprites = None
 heroObject = None
 monsterObject = None
@@ -47,8 +46,7 @@ def change_scene():
 
 
 def enter():
-    global fade_object, sprites, turn, herodice, turnbtn, heroObject, monsterObject
-    fade_object = fade()
+    global sprites, turn, herodice, turnbtn, heroObject, monsterObject
     sprites = battle_state_sprite.Battle_state_sprite()
     winsound.PlaySound('../Resources/battle/combat1Sound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                        winsound.SND_LOOP | winsound.SND_ASYNC)
@@ -84,8 +82,6 @@ def handle_events():
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
-            if event.key == SDLK_SPACE:
-                fade_object.pop_state()
             if event.key == SDLK_o and turn is False:
                 change_turn()
         if turn:
@@ -135,7 +131,7 @@ def update():
                 sprites.setvictory()
                 pass
 
-    fade_object.update()
+    Fade.update()
 
 
 def draw():
@@ -151,6 +147,5 @@ def draw():
     if herodice:
         herodice.draw()
 
-
-    fade_object.draw()
+    Fade.draw()
     update_canvas()

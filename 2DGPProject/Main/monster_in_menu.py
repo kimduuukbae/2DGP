@@ -3,7 +3,7 @@ import game_framework
 import main_state
 import banner
 import winsound
-import stage1
+
 
 
 class IdleState:
@@ -62,7 +62,7 @@ class ExitState:
         monster.x -= 3
         ExitState.count += 2
         if ExitState.count > 20:
-            main_state.STAGE_FACTORY["stage1"].banner_list.append(banner.BattleBanner())
+            main_state.stage_collection.cur_stage.banner_list.append(banner.BattleBanner())
             winsound.PlaySound('../Resources/stage/fightfxSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                                winsound.SND_ASYNC)
             monster.event_que.append(WaitState)
@@ -92,14 +92,12 @@ class Monster_in_menu(Object):
         self.name = name
         self.frame = 0
         self.frameTime = 0.0
-        self.live = True
         self.type = 1
         self.cur_state = IdleState
         self.event_que = []
 
     def draw(self):
-        if self.live:
-            self.image.clip_draw(self.clipWidth*self.frame, 0, self.clipWidth, self.clipHeight,
+        self.image.clip_draw(self.clipWidth*self.frame, 0, self.clipWidth, self.clipHeight,
                              self.x + self.pivotX, self.y + self.pivotY, self.imageWidth/2, self.imageHeight)
 
     def update(self):
@@ -117,16 +115,16 @@ class Monster_in_menu(Object):
         if self.cur_state is IdleState:
             self.event_que.append(BattleState)
 
-    def set_live(self, flag):
-        self.live = flag
+    def get_name(self):
+        return self.name
 
     def get_type(self):
-        return self.name
+        return self.type
 
     def get_id(self):
         return self.id
 
-    def push_state(self, state):
+    def push_event(self, state):
         self.event_que.append(state)
 
 

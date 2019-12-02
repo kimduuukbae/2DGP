@@ -9,7 +9,6 @@ name = "TitleState"
 background = None
 char = None
 title = None
-fade_object = None
 oList = []
 font = None
 
@@ -70,8 +69,8 @@ class Button(o.Object):
 
 
 def enter():
-
-    global background, char, title, fade_object, font
+    global background, char, title, font
+    fadescene.Fade()
     background = o.Object('../Resources/intro/background.png')
     title = o.Object('../Resources/intro/introLogo.png')
     char = o.Object('../Resources/intro/char.png')
@@ -101,8 +100,6 @@ def enter():
     winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                        winsound.SND_LOOP | winsound.SND_ASYNC)
 
-    fade_object = fadescene.fade()
-
 
 def exit():
     global background, char, title
@@ -129,7 +126,7 @@ def handle_events():
                 x = event.x
                 y = 1080 - 1 - event.y
                 if oList[5].click_button(x, y) is True:
-                    fade_object.changeScene(main_state)
+                    fadescene.Fade.change_state(main_state)
                     break
                 if oList[6].click_button(x, y) is True:
                     game_framework.quit()
@@ -142,11 +139,11 @@ def draw():
     char.draw()
     for i in oList:
         i.draw()
-    fade_object.draw()
+    fadescene.Fade.draw()
     update_canvas()
 
 
 def update():
     for i in oList:
         i.update()
-    fade_object.update()
+    fadescene.Fade.update()

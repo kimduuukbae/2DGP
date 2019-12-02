@@ -2,7 +2,7 @@ from pico2d import *
 import game_framework
 import battle_state
 import main_state
-
+import fadescene
 
 class Banner:
     image = None
@@ -70,7 +70,7 @@ class WinBanner(Banner):
         self.pivotX = 10
 
     def change_scene(self):
-        battle_state.fade_object.pop_state()
+        fadescene.Fade.pop_state()
 
 
 class BattleBanner(Banner):
@@ -90,4 +90,4 @@ class BattleBanner(Banner):
         self.time = 0.0
 
     def change_scene(self):
-        main_state.STAGE_FACTORY[main_state.cur_stage].fade_object.push_state(battle_state)
+        fadescene.Fade.push_state(battle_state)

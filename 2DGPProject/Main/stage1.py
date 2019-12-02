@@ -18,14 +18,18 @@ sprite_list = None
 def collision_hero_object(hero_object, collision_object):
     if hero_object.get_id() == collision_object.get_id() and \
     not hero_object.get_in_battle() and not collision_object.get_in_battle():
-        collision_object.set_in_battle()
-        hero_object.set_in_battle(True)
-        Hero_status().set_enemy_type(collision_object.get_type())
-
+        if collision_object.get_type() == 1:
+            collision_object.set_in_battle()
+            hero_object.set_in_battle(True)
+            Hero_status().set_enemy_type(collision_object.get_name())
+        else:
+            collision_object.push_event(WaitState)
+            fadescene.Fade.push_event(fadescene.FadeInStage)
 
 
 def enter():
-    global character, map_list, bridge_list, fade_object, sprite_list
+
+    global character, map_list, bridge_list, sprite_list
     character = hero('../Resources/stage/character.png')
     sprite_list = main_state_spritelist()
     sprite_list.add_image('../Resources/stage/stageArea.png')
@@ -36,7 +40,6 @@ def enter():
     character.set_position(300, 600)
     character.set_image_pivot(20, 50)
     character.set_image_size(260, 150)
-    fade_object = fadescene.fade()
 
 
 def exit():
@@ -85,7 +88,7 @@ def update():
         collision_hero_object(character, i)
     for i in banner_list:
         i.update()
-    fade_object.update()
+    fadescene.Fade.update()
 
 
 def draw():
@@ -100,7 +103,7 @@ def draw():
     character.draw()
     for i in banner_list:
         i.draw()
-    fade_object.draw()
+    fadescene.Fade.draw()
     update_canvas()
 
 
@@ -113,7 +116,6 @@ def pause():
 
 def resume():
     character.add_position_x(131)
-    fade_object.setFirst()
     banner_list.pop()
     winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                        winsound.SND_LOOP | winsound.SND_ASYNC)

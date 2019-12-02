@@ -1,33 +1,33 @@
-import stage1
+import stage_manager
 
-STAGE_FACTORY = {"stage1" : stage1}
+stage_collection = None
 
-cur_stage = None
 
 def enter():
-    global cur_stage
-    cur_stage = "stage1"
-    STAGE_FACTORY[cur_stage].enter()
+    global stage_collection
+    stage_collection = stage_manager.StageManager()
+    stage_collection.enter()
 
 
 def exit():
-    STAGE_FACTORY[cur_stage].exit()
+    stage_collection.exit()
 
 
 def handle_events():
-    STAGE_FACTORY[cur_stage].handle_events()
+    stage_collection.handle_events()
 
 
 def update():
-    STAGE_FACTORY[cur_stage].update()
+    stage_collection.update()
 
 
 def draw():
-    STAGE_FACTORY[cur_stage].draw()
+    stage_collection.draw()
+
 
 def pause():
-    STAGE_FACTORY[cur_stage].pause()
+    stage_collection.pause()
 
 
 def resume():
-    STAGE_FACTORY[cur_stage].resume()
+    stage_collection.resume()
