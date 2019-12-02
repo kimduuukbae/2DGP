@@ -1,4 +1,4 @@
-from mapTile import *
+from Maptile import *
 from monster_in_menu import *
 from banner import *
 import fadescene
@@ -6,35 +6,45 @@ from main_state_spritelist import *
 import winsound
 from hero import *
 
-mapList = None
-bridgeList = None
+map_list = None
+bridge_list = None
 character = None
-fadeObj = None
-spriteList = None
-def collisionHeroVsObject(heroObj, colObj):
-    if heroObj.getHeroId() == colObj.getId() and \
-    not heroObj.getBattle() and not colObj.getBattle():
-        colObj.setBattle(True)
-        heroObj.setBattle(True)
-        hero_status().setEnemyType(colObj.getType())
+collision_object_list = []
+banner_list = []
+fade_object = None
+sprite_list = None
+
+
+def collision_hero_object(hero_object, collision_object):
+    if hero_object.get_id() == collision_object.get_id() and \
+    not hero_object.get_in_battle() and not collision_object.get_in_battle():
+        collision_object.set_in_battle()
+        hero_object.set_in_battle(True)
+        Hero_status().set_enemy_type(collision_object.get_type())
+
+
 
 def enter():
-    global character, mapList, bridgeList, fadeObj, spriteList
+    global character, map_list, bridge_list, fade_object, sprite_list
     character = hero('../Resources/stage/character.png')
-    spriteList = main_state_spritelist()
-    spriteList.addImage('../Resources/stage/stage1Area.png')
+    sprite_list = main_state_spritelist()
+    sprite_list.add_image('../Resources/stage/stageArea.png')
+    collision_object_list.append(Slime())
+    collision_object_list[0].set_position(550, 850)
 
-    mapList, bridgeList = makeMap()
+    map_list, bridge_list = make_map()
+    character.set_position(300, 600)
+    character.set_image_pivot(20, 50)
+    character.set_image_size(260, 150)
+    fade_object = fadescene.fade()
 
-    character.setPos(300,600)
-    character.setPivot(20,50)
-    character.setSize(260,150)
-    fadeObj = fadescene.fade()
+
 def exit():
     global character
     del character
-    spriteList.clear()
-    mapList.clear()
+    sprite_list.clear()
+    map_list.clear()
+
 
 def handle_events():
     events = get_events()
@@ -44,48 +54,72 @@ def handle_events():
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
-            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_o):
-                fadeObj.cycle()
             if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
                 x = event.x
                 y = 1080 - 1 - event.y
-                if character.getMoving() or character.getBattle():
+                if character.get_moving() or character.get_in_battle():
                     pass
-                for i in mapList:
-                    if i.clickTile(x,y):
-                        cleanMapList()
-                        tileX, tileY, tileId = i.getInfo()
-                        if tileId == character.getHeroId():
+                for i in map_list:
+                    if i.click_tile(x, y):
+                        clear_maplist()
+                        tile_x, tile_y, tile_id = i.get_tileinfo()
+                        if tile_id == character.get_id():
                             break
-                        for j in mapList:
-                            j.setVisit(False)
-                        if checkMap(character.getHeroId(), tileId):
-                            insertMap(mapList, character.getHeroId(), tileId)
-                            character.moveTo(getMapList())
+                        for j in map_list:
+                            j.set_visited(False)
+                        if check_map(character.get_id(), tile_id):
+                            insert_map(map_list, character.get_id(), tile_id)
+                            character.move_to_tile(get_maplist())
                         break
             if event.type == SDL_MOUSEMOTION:
                 x = event.x
                 y = 1080 - 1 - event.y
-                for i in mapList:
-                    i.overlapTile(x, y)
+                for i in map_list:
+                    i.overlap_tile(x, y)
 
 
 def update():
     character.update()
-    fadeObj.update()
+    for i in collision_object_list:
+        i.update()
+        collision_hero_object(character, i)
+    for i in banner_list:
+        i.update()
+    fade_object.update()
+
+
 def draw():
     clear_canvas()
-    spriteList.draw()
-    for i in bridgeList:
-        i.rotate_draw()
-    for i in mapList:
-        i.clip_draw()
+    sprite_list.draw()
+    for i in bridge_list:
+        i.draw()
+    for i in map_list:
+        i.draw()
+    for i in collision_object_list:
+        i.draw()
     character.draw()
-    fadeObj.draw()
+    for i in banner_list:
+        i.draw()
+    fade_object.draw()
     update_canvas()
 
+
 def pause():
+    for i in range(len(collision_object_list)):
+        if collision_object_list[i].get_in_battle():
+            collision_object_list.pop(i)
     pass
 
+
 def resume():
+    character.add_position_x(131)
+    fade_object.setFirst()
+    banner_list.pop()
+    winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
+                       winsound.SND_LOOP | winsound.SND_ASYNC)
+    sprite_list.reset()
+
+    if len(collision_object_list) == 0:
+        collision_object_list.append(Door())
+        collision_object_list[-1].set_position(1550, 850)
     pass

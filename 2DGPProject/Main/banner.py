@@ -3,14 +3,16 @@ import game_framework
 import battle_state
 import main_state
 
-class banner:
+
+class Banner:
     image = None
     background = None
+
     def __init__(self):
-        if banner.image is None:
-            banner.image = load_image("../Resources/stage/banner.png")
-        if banner.background == None:
-            banner.background = load_image("../Resources/stage/winbannerbackground.png")
+        if Banner.image is None:
+            Banner.image = load_image("../Resources/stage/banner.png")
+        if Banner.background is None:
+            Banner.background = load_image("../Resources/stage/winbannerbackground.png")
         self.x = 950
         self.y = 2000
 
@@ -19,12 +21,14 @@ class banner:
 
         self.changeTime = 0.0
         self.changeState = None
+
     def draw(self):
-        banner.background.draw(960, 540)
-        banner.image.draw(self.x, self.y, banner.image.w, banner.image.h)
+        Banner.background.draw(960, 540)
+        Banner.image.draw(self.x, self.y, Banner.image.w, Banner.image.h)
         self.text.draw(self.x, self.y, self.text.w, self.text.h)
         self.sport.clip_draw(0, self.frame * self.clipSportY, self.clipSportX,
                                 self.clipSportY, self.x + self.pivotX, self.y + self.pivotY, self.imageWidth, self.imageHeight)
+
     def update(self):
         self.time += game_framework.frame_time
         if self.time > 0.1:
@@ -37,14 +41,17 @@ class banner:
             if self.changeTime > 2.0:
                 self.change_scene()
                 self.changeTime = 0.0
+
     def change_scene(self):
         pass
+
     def init(self):
         self.time = 0
         self.y = 2000
         self.changeTime = 0
 
-class WinBanner(banner):
+
+class WinBanner(Banner):
 
     def __init__(self):
         super().__init__()
@@ -63,9 +70,10 @@ class WinBanner(banner):
         self.pivotX = 10
 
     def change_scene(self):
-        battle_state.fadeObj.pop_state()
+        battle_state.fade_object.pop_state()
 
-class BattleBanner(banner):
+
+class BattleBanner(Banner):
     def __init__(self):
         super().__init__()
         self.text = load_image("../Resources/stage/battleText.png")
@@ -80,5 +88,6 @@ class BattleBanner(banner):
         self.pivotX  = 10
         self.pivotY = 0
         self.time = 0.0
+
     def change_scene(self):
-        main_state.fadeObj.push_state(battle_state)
+        main_state.STAGE_FACTORY[main_state.cur_stage].fade_object.push_state(battle_state)

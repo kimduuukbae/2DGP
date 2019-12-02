@@ -1,7 +1,8 @@
 from object import *
 import game_framework
 
-class Monster_In_Battle(object):
+
+class Inbattlemonster(Object):
     def __init__(self, name):
         super().__init__(None)
         self.type = name
@@ -12,14 +13,17 @@ class Monster_In_Battle(object):
         self.hp = 0
         self.pivot = 0
 
-    def gethp(self):
+    def get_hp(self):
         return self.hp
-    def getname(self):
+
+    def get_name(self):
         return self.type
-    def getpivot(self):
+
+    def get_pivot(self):
         return self.pivot
 
-class slime(Monster_In_Battle):
+
+class Slime(Inbattlemonster):
     def __init__(self):
         super().__init__("슬라임")
         self.image = pico2d.load_image('../Resources/battle/slimeAtlas.png')
@@ -32,44 +36,54 @@ class slime(Monster_In_Battle):
         self.hp = 10
         self.pivot = 14.5
         self.info = "슬라임은 기본 공격에 약합니다."
+
     def update(self):
         self.frameTime += game_framework.frame_time
         if self.frameTime > 0.2:
             self.frameTime = 0.0
             self.frame = (self.frame + 1)%10
+
     def draw(self, x = 0, y = 0):
         self.image.clip_draw(self.frame % 5 * self.imageWidth,(1 - (self.frame // 5)) * self.imageHeight,
                              self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
 
 
-def monsterFactory(type):
-    temp = None
-    if type == "슬라임":
-        temp = slime()
-    return temp
+MONSTER_LIST = {"슬라임" : Slime }
 
-class monster_status:
+
+def make_monster(monster_type):
+    return MONSTER_LIST[monster_type]()
+
+
+class Monsterstatus:
     hp = 0
-    maxhp = 0
+    max_hp = 0
     pivot = 0
-    backimg = None
+    background_image = None
     img = None
     name = None
-    def __init__(self):
-        if monster_status.backimg == None and monster_status.img == None:
-            monster_status.backimg = pico2d.load_image("../Resources/common/hpbarback.png")
-            monster_status.img = pico2d.load_image("../Resources/common/hpbar.png")
-    def setstatus(self, obj):
-        monster_status.hp = obj.gethp()
-        monster_status.maxhp = obj.gethp()
-        monster_status.name = obj.getname()
-        monster_status.pivot = obj.getpivot()
-    def draw(self,x,y):
-        monster_status.backimg.draw(x, y)
 
-        monster_status.img.draw(x - int((monster_status.maxhp - monster_status.hp) * monster_status.pivot), y, \
-                             monster_status.img.w - (
-                                 int((monster_status.img.w / monster_status.maxhp) * (monster_status.maxhp - monster_status.hp))), \
-                             monster_status.img.h)
-    def addhp(self,value):
-        monster_status.hp += value
+    def __init__(self):
+        if Monsterstatus.background_image is None and Monsterstatus.img is None:
+            Monsterstatus.background_image = pico2d.load_image("../Resources/common/hpbarback.png")
+            Monsterstatus.img = pico2d.load_image("../Resources/common/hpbar.png")
+
+    @staticmethod
+    def set_status(obj):
+        Monsterstatus.hp = obj.get_hp()
+        Monsterstatus.max_hp = obj.get_hp()
+        Monsterstatus.name = obj.get_name()
+        Monsterstatus.pivot = obj.get_pivot()
+
+    @staticmethod
+    def draw(x, y):
+        Monsterstatus.background_image.draw(x, y)
+
+        Monsterstatus.img.draw(x - int((Monsterstatus.max_hp - Monsterstatus.hp) * Monsterstatus.pivot), y, \
+                               Monsterstatus.img.w - (
+                                 int((Monsterstatus.img.w / Monsterstatus.max_hp) * (Monsterstatus.max_hp - Monsterstatus.hp))), \
+                               Monsterstatus.img.h)
+
+    @staticmethod
+    def add_hp(value):
+        Monsterstatus.hp += value

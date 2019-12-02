@@ -1,6 +1,6 @@
 from font import *
 import pico2d
-from monster_in_battle import monster_status
+from monster_in_battle import Monsterstatus
 import game_framework
 from hero import *
 class item:
@@ -108,7 +108,7 @@ class baseattack(item):
         self.imageheight = self.image.h
     def active(self, obj):
         self.used = True
-        monster_status().addhp(-obj.get_count())
+        Monsterstatus().add_hp(-obj.get_count())
         obj.set_use()
         pass
 class ironshield(item):
@@ -124,7 +124,7 @@ class ironshield(item):
     def active(self, obj):
         self.used = True
         obj.set_use()
-        hero_status().addshield(obj.get_count())
+        Hero_status().add_shield(obj.get_count())
         pass
 class reloaddice(item):
     def __init__(self):
@@ -163,18 +163,15 @@ class poison(item):
 
     def active(self, obj):
         self.used = True
-        monster_status().addhp(-obj.get_count())
+        Monsterstatus().add_hp(-obj.get_count())
         obj.set_use()
 
+
+ITEM_LIST = {"baseattack" : baseattack, "reloaddice" : reloaddice, "ironshield" : ironshield, "poison" : poison}
+
+
 def itemfactory(name):
-    if name == "baseattack":
-        return baseattack()
-    elif name == "reloaddice":
-        return reloaddice()
-    elif name == "ironshield":
-        return ironshield()
-    elif name == "poison":
-        return poison()
+    return ITEM_LIST[name]()
 
 class item_manager:
     def __init__(self, type):

@@ -1,11 +1,14 @@
 import pico2d
 
-def collisionMouse(mouse, A):
+
+def collide_to_mouse(mouse, A):
     left, bottom, right, top = A.get_box()
     if mouse[0] > left and mouse[0] < right and mouse[1] > bottom and mouse[1] < top:
         return True
     return False
-class button:
+
+
+class Button:
     def __init__(self):
         self.x = 0
         self.y = 0
@@ -13,18 +16,22 @@ class button:
         self.imageHeight = 0
 
 
-class turnbutton(button):
+class Turnbutton(Button):
     image = None
+
     def __init__(self):
-        if turnbutton.image == None:
-            turnbutton.image = pico2d.load_image('../Resources/common/nextbutton.png')
-        self.imageWidth = turnbutton.image.w
-        self.imageHeight = turnbutton.image.h
+        if Turnbutton.image is None:
+            Turnbutton.image = pico2d.load_image('../Resources/common/nextbutton.png')
+        self.imageWidth = Turnbutton.image.w
+        self.imageHeight = Turnbutton.image.h
+
     def draw(self):
-        turnbutton.image.draw(self.x, self.y)
+        Turnbutton.image.draw(self.x, self.y)
+
     def get_box(self):
         return self.x - self.imageWidth // 2, self.y - self.imageHeight // 2, \
                self.x + self.imageWidth // 2, self.y + self.imageHeight // 2
-    def setPos(self,x,y):
+
+    def set_position(self, x, y):
         self.x = x
         self.y = y
