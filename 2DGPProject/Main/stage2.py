@@ -33,7 +33,7 @@ def enter():
     character = Hero('../Resources/stage/character.png')
     sprite_list = main_state_spritelist()
     sprite_list.add_image('../Resources/stage/stage1Area.png')
-    collision_object_list.append(Slime())
+    collision_object_list.append(BabySquid())
     collision_object_list[0].set_position(550, 850)
 
     map_list, bridge_list = make_map()

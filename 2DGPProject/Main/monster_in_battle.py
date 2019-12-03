@@ -52,8 +52,32 @@ class Slime(Inbattlemonster):
         self.image.clip_draw(self.frame % 5 * self.imageWidth,(1 - (self.frame // 5)) * self.imageHeight,
                              self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
 
+class BabySquid(Inbattlemonster):
+    def __init__(self):
+        super().__init__("새끼오징어")
+        self.image = pico2d.load_image('../Resources/battle/babysquidAtlas.png')
+        self.imageWidth = self.image.w // 5
+        self.imageHeight = self.image.h // 2
+        self.clipWidth = self.imageWidth
+        self.clipHeight = self.imageHeight
+        self.hp = 15
+        self.pivot = 10
+        self.info = "새끼오징어는 기본 공격에 약합니다."
 
-MONSTER_LIST = {"슬라임" : Slime }
+        self.item_list = ["poison", "poison", "poison"]
+
+    def update(self):
+        self.frameTime += game_framework.frame_time
+        if self.frameTime > 0.1:
+            self.frameTime = 0.0
+            self.frame = (self.frame + 1)%10
+
+    def draw(self, x = 0, y = 0):
+        self.image.clip_draw(self.frame % 5 * self.imageWidth,(1 - (self.frame // 5)) * self.imageHeight,
+                             self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
+
+
+MONSTER_LIST = {"슬라임" : Slime, "새끼오징어" : BabySquid }
 
 
 def make_monster(monster_type):

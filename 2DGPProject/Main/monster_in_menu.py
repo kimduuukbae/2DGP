@@ -157,4 +157,16 @@ class Door(Monster_in_menu):
         self.type = 2
 
 
+class BabySquid(Monster_in_menu):
+    def __init__(self):
+        super().__init__("새끼오징어")
+        self.image = pico2d.load_image("../Resources/stage/babysquidStage.png")
+        self.imageWidth = self.image.w
+        self.imageHeight = self.image.h
+        self.clipWidth = self.imageWidth // 2
+        self.clipHeight = self.imageHeight
+        self.id = 8
+        self.pivotX = 0
+        self.pivotY = 70
+
 
