@@ -32,7 +32,7 @@ def enter():
     global character, map_list, bridge_list, sprite_list
     character = Hero('../Resources/stage/character.png')
     sprite_list = main_state_spritelist()
-    sprite_list.add_image('../Resources/stage/stageArea.png')
+    sprite_list.add_image('../Resources/stage/stage1Area.png')
     collision_object_list.append(Slime())
     collision_object_list[0].set_position(550, 850)
 

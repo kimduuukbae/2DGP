@@ -4,6 +4,8 @@ import winsound
 from item import *
 from dice import *
 from button import *
+import hero
+import monster_in_battle
 
 sprites = None
 heroObject = None
@@ -54,13 +56,8 @@ def enter():
     heroObject = item_manager("hero")
     monsterObject = item_manager("monster")
 
-    heroObject.push_item("baseattack")
-    heroObject.push_item("ironshield")
-    heroObject.push_item("reloaddice")
-
-    monsterObject.push_item("poison")
-    monsterObject.push_item("poison")
-    monsterObject.push_item("poison")
+    heroObject.push_item_list(hero.Hero_status.equip_item)
+    monsterObject.push_item_list(monster_in_battle.Monsterstatus.item_list)
 
     turn = True # True == character
     herodice = Dice_manager(2)
@@ -70,6 +67,13 @@ def enter():
 
 
 def exit():
+    global clickflag, clickidx, changeturn, changetime, changescene
+    sprites.clear_banner()
+    clickflag = False
+    clickidx = -1
+    changeturn = False
+    changetime = 0.0
+    changescene = False
     pass
 
 

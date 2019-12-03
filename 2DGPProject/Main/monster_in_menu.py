@@ -5,7 +5,6 @@ import banner
 import winsound
 
 
-
 class IdleState:
     @staticmethod
     def enter(monster):
@@ -126,6 +125,9 @@ class Monster_in_menu(Object):
 
     def push_event(self, state):
         self.event_que.append(state)
+
+    def set_id(self, value):
+        self.id = value
 
 
 class Slime(Monster_in_menu):

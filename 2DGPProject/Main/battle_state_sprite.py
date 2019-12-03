@@ -72,3 +72,6 @@ class Battle_state_sprite:
 
     def setvictory(self):
         self.victory_flag = 3
+
+    def clear_banner(self):
+        self.victory_flag = 0

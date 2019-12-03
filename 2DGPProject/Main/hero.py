@@ -1,73 +1,107 @@
 from object import *
 import pico2d
+import item
 
-class hero(Object):
+class IdleState:
+
+    @staticmethod
+    def enter(hero):
+        pass
+
+    @staticmethod
+    def do(hero):
+        pass
+
+
+class WalkState:
+
+    @staticmethod
+    def enter(hero):
+        pass
+
+    @staticmethod
+    def do(hero):
+            hero.x += hero.distanceX
+            hero.y += hero.distanceY
+            hero.count += 1
+            if hero.count == 100:
+                hero.count = 0
+                hero.id = hero.moveLists[0][2]
+                hero.moveLists.pop(0)
+                hero.cur_state = IdleState
+                if len(hero.moveLists):
+                    hero.move_to_tile(hero.moveLists)
+
+class BattleState:
+    count = 0
+    @staticmethod
+    def enter(hero):
+        BattleState.count = 0
+
+    @staticmethod
+    def do(hero):
+        hero.x -= 3
+        BattleState.count += 2
+        if BattleState.count > 100:
+            hero.event_que.append(ExitState)
+
+
+class ExitState:
+    count = 0
+
+    @staticmethod
+    def enter(hero):
+        ExitState.count = 0
+
+    @staticmethod
+    def do(hero):
+        hero.x += 3
+        ExitState.count += 2
+        if ExitState.count > 20:
+            hero.event_que.append(IdleState)
+
+class Hero(Object):
     def __init__(self, image_name = None):
         super().__init__(image_name)
         self.id = 1
-        self.moveFlag = False
         self.name = "전사"
-
         self.toX = 0
         self.toY = 0
-
         self.distanceX = 0
         self.distanceY = 0
-
         self.count = 0
-
-        self.battle = False
-        self.battleEffectFlag = False
-        self.battleEffectSize = -1
-
         self.moveLists = []
 
+        self.cur_state = IdleState
+        self.event_que = []
+
     def update(self):
-        if self.battle:
-            if not self.battleEffectFlag:
-                self.x -= 3
-                self.battleEffectSize -= 2
-                if self.battleEffectSize < -100:
-                    self.battleEffectSize = -1
-                    self.battleEffectFlag = True
-            else:
-                self.x += 2
-                self.battleEffectSize -= 2
-                if self.battleEffectSize < -20:
-                    self.battleEffectFlag = False
-                    self.battle = False
-        if self.moveFlag:
-            self.x += self.distanceX
-            self.y += self.distanceY
-            self.count += 1
-            if self.count == 100:
-                self.count = 0
-                self.id = self.moveLists[0][2]
-                self.moveFlag = False
-                self.moveLists.pop(0)
-                if len(self.moveLists):
-                    self.move_to_tile(self.moveLists)
+        self.cur_state.do(self)
+        if len(self.event_que) > 0:
+            event = self.event_que.pop()
+            self.cur_state = event
+            self.cur_state.enter(self)
 
     def get_id(self):
         return self.id
 
     def move_to_tile(self, lists):
-        if not self.moveFlag:
+        if self.cur_state is IdleState:
             self.moveLists = lists
             self.toX = self.moveLists[0][0]
             self.toY = self.moveLists[0][1]
             self.distanceX = (self.toX - self.x) / 100
             self.distanceY = (self.toY - self.y) / 100
-            self.moveFlag = True
+            self.cur_state = WalkState
 
     def get_moving(self):
-        return self.moveFlag
+        return self.cur_state == WalkState
 
     def get_in_battle(self):
-        return self.battle
+        return self.cur_state == BattleState
 
-    def set_in_battle(self, flag):
-        self.battle = flag
+    def set_in_battle(self):
+        self.event_que.append(BattleState)
 
     def add_position_x(self, value):
         self.x += value
@@ -81,11 +115,16 @@ class Hero_status:
     background_image = None
     img = None
     enemy_type = None
+    equip_item = []
 
     def __init__(self):
         if Hero_status.background_image is None and Hero_status.img is None:
             Hero_status.background_image = pico2d.load_image("../Resources/common/hpbarback.png")
             Hero_status.img = pico2d.load_image("../Resources/common/hpbar.png")
+
+            Hero_status.equip_item.append("baseattack")
+            Hero_status.equip_item.append("ironshield")
+            Hero_status.equip_item.append("reloaddice")
 
     @staticmethod
     def get_hp():
@@ -122,3 +161,9 @@ class Hero_status:
     @staticmethod
     def set_enemy_type(enemytype):
         Hero_status.enemy_type = enemytype
+
+    @staticmethod
+    def push_equip_item(item_name):
+        Hero_status.equip_item.append(item.itemfactory(item_name))
+        Hero_status.equip_item.pop(0)
+

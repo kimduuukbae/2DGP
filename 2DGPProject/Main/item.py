@@ -196,9 +196,21 @@ class item_manager:
         else:
             self.itemlist[-1].setx(self.startX, self.stopX - ((len(self.itemlist) - 1) * 500))
             self.itemlist[-1].enemyset()
+
+    def push_item_list(self, item_list):
+        for i in item_list:
+            self.itemlist.append(itemfactory(i))
+
+            if self.type == "hero":
+                self.itemlist[-1].setx(self.startX, self.stopX + ((len(self.itemlist) - 1) * 500))
+            else:
+                self.itemlist[-1].setx(self.startX, self.stopX - ((len(self.itemlist) - 1) * 500))
+                self.itemlist[-1].enemyset()
+
     def draw(self):
         for i in self.itemlist:
             i.draw()
+
     def getlist(self):
         return self.itemlist
     def changeturn(self):

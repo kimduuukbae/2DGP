@@ -10,8 +10,11 @@ class Inbattlemonster(Object):
         self.frameTime = 0.0
         self.imageWidth = 0
         self.imageHeight = 0
+        self.x = 1700
+        self.y = 800
         self.hp = 0
         self.pivot = 0
+        self.item_list = None
 
     def get_hp(self):
         return self.hp
@@ -22,6 +25,8 @@ class Inbattlemonster(Object):
     def get_pivot(self):
         return self.pivot
 
+    def get_item_list(self):
+        return self.item_list
 
 class Slime(Inbattlemonster):
     def __init__(self):
@@ -31,11 +36,11 @@ class Slime(Inbattlemonster):
         self.imageHeight = self.image.h // 2
         self.clipWidth = self.imageWidth
         self.clipHeight = self.imageHeight
-        self.x = 1700
-        self.y = 800
         self.hp = 10
         self.pivot = 14.5
         self.info = "슬라임은 기본 공격에 약합니다."
+
+        self.item_list = ["poison", "poison", "poison"]
 
     def update(self):
         self.frameTime += game_framework.frame_time
@@ -62,11 +67,14 @@ class Monsterstatus:
     background_image = None
     img = None
     name = None
+    item_list = None
+
 
     def __init__(self):
         if Monsterstatus.background_image is None and Monsterstatus.img is None:
             Monsterstatus.background_image = pico2d.load_image("../Resources/common/hpbarback.png")
             Monsterstatus.img = pico2d.load_image("../Resources/common/hpbar.png")
+
 
     @staticmethod
     def set_status(obj):
@@ -74,6 +82,7 @@ class Monsterstatus:
         Monsterstatus.max_hp = obj.get_hp()
         Monsterstatus.name = obj.get_name()
         Monsterstatus.pivot = obj.get_pivot()
+        Monsterstatus.item_list = obj.get_item_list()
 
     @staticmethod
     def draw(x, y):
@@ -87,3 +96,5 @@ class Monsterstatus:
     @staticmethod
     def add_hp(value):
         Monsterstatus.hp += value
+
+

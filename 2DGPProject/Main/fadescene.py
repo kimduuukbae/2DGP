@@ -15,12 +15,12 @@ class Idle:
 class FadeIn:
     @staticmethod
     def enter(fadeobj):
-        fadeobj.x = -960
+        fadeobj.x = -960.0
         pass
 
     @staticmethod
     def do(fadeobj):
-        fadeobj.x += 15
+        fadeobj.x += 5760 * game_framework.frame_time
         if fadeobj.x > 960:
             fadeobj.push_event(FadeOut)
             if fadeobj.change_type is False:
@@ -31,38 +31,38 @@ class FadeIn:
 class FadeInPop:
     @staticmethod
     def enter(fadeobj):
-        fadeobj.x = -960
+        fadeobj.x = -960.0
         pass
 
     @staticmethod
     def do(fadeobj):
-        fadeobj.x += 15
-        if fadeobj.x > 960:
+        fadeobj.x += 5760 * game_framework.frame_time
+        if fadeobj.x > 960.0:
             fadeobj.push_event(FadeOut)
             game_framework.pop_state()
 
 class FadeInStage:
     @staticmethod
     def enter(fadeobj):
-        fadeobj.x = -960
+        fadeobj.x = -960.0
 
     @staticmethod
     def do(fadeobj):
-        fadeobj.x += 15
-        if fadeobj.x > 960:
+        fadeobj.x += 5760 * game_framework.frame_time
+        if fadeobj.x > 960.0:
             fadeobj.push_event(FadeOut)
             stage_manager.StageManager.next_stage()
 
 class FadeOut:
     @staticmethod
     def enter(fadeobj):
-        fadeobj.x = 960
+        fadeobj.x = 960.0
         pass
 
     @staticmethod
     def do(fadeobj):
-        fadeobj.x += 15
-        if fadeobj.x > 2880:
+        fadeobj.x += 5760 * game_framework.frame_time
+        if fadeobj.x > 2880.0:
             fadeobj.push_event(Idle)
         pass
 
@@ -75,8 +75,8 @@ class Fade:
     next_state = None
     change_type = False
     event_que = []
-    x = -960
-    y = 540
+    x = -960.0
+    y = 540.0
 
     def __init__(self):
         if Fade.cur_state is None:
