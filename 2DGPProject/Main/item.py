@@ -3,6 +3,7 @@ import pico2d
 from monster_in_battle import Monsterstatus
 import game_framework
 from hero import *
+
 class item:
     volX = 30
     volY = 30
@@ -92,8 +93,10 @@ class item:
         self.x = x1
         self.startX = x1
         self.stopX = x2
+    def add_x_position(self, x):
+        self.x += x
 
-class baseattack(item):
+class BaseAttack(item):
     def __init__(self):
         super().__init__()
         self.x = -800
@@ -110,8 +113,9 @@ class baseattack(item):
         self.used = True
         Monsterstatus().add_hp(-obj.get_count())
         obj.set_use()
-        pass
-class ironshield(item):
+
+
+class IronShield(item):
     def __init__(self):
         super().__init__()
         self.itemName = "철 방패"
@@ -121,12 +125,14 @@ class ironshield(item):
         self.pivotItemInfo = -140
         self.imagewidth = self.image.w
         self.imageheight = self.image.h
+
     def active(self, obj):
         self.used = True
         obj.set_use()
-        Hero_status().add_shield(obj.get_count())
-        pass
-class reloaddice(item):
+        HeroStatus.add_shield(obj.get_count())
+
+
+class ReloadDice(item):
     def __init__(self):
         super().__init__()
         self.count = 3
@@ -137,6 +143,7 @@ class reloaddice(item):
         self.pivotItemInfo = -160
         self.imagewidth = self.image.w
         self.imageheight = self.image.h
+
     def active(self, obj):
         obj.set_use()
         obj.redice()
@@ -150,7 +157,7 @@ class reloaddice(item):
         self.count = 3
         self.itemInfo = "주사위를 " + str(self.count) + "회 다시 굴린다."
 
-class poison(item):
+class Poison(item):
     def __init__(self):
         super().__init__()
         self.itemName = "중독"
@@ -166,8 +173,24 @@ class poison(item):
         Monsterstatus().add_hp(-obj.get_count())
         obj.set_use()
 
+class InkAttack(item):
+    def __init__(self):
+        super().__init__()
+        self.itemName = "먹물 공격"
+        self.itemInfo = "1의 독과 데미지를 입힌다."
+        self.image = pico2d.load_image('../Resources/common/small_purple.png')
+        self.pivotItemName = -60
+        self.pivotItemInfo = -155
+        self.imagewidth = self.image.w
+        self.imageheight = self.image.h
 
-ITEM_LIST = {"baseattack" : baseattack, "reloaddice" : reloaddice, "ironshield" : ironshield, "poison" : poison}
+    def active(self, obj):
+        self.used = True
+        Monsterstatus().add_hp(-obj.get_count())
+        obj.set_use()
+
+ITEM_LIST = {"baseattack" : BaseAttack, "reloaddice" : ReloadDice, "ironshield" : IronShield, "poison" : Poison,
+             "inkattack" : InkAttack}
 
 
 def itemfactory(name):
@@ -213,12 +236,17 @@ class item_manager:
 
     def getlist(self):
         return self.itemlist
+
+    def update(self):
+        for i in self.itemlist:
+            i.update()
+
     def changeturn(self):
         for i in self.itemlist:
             i.setexitturn()
-    def reuse(self):
-        for i in self.itemlist:
-            i.reuse()
+
+    def item_clear(self):
+        self.itemlist.clear()
 
 
 

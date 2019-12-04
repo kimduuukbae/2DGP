@@ -34,7 +34,7 @@ class Dice_image:
 
     @staticmethod
     def get_dice():
-        temp = random.randint(3, 5)
+        temp = random.randint(1, 5)
         return Dice_image.dicelist[temp], temp + 1
 
 
@@ -76,9 +76,16 @@ class Dice:
 
     def update(self):
         if self.first:
-            self.y += 10
-            if self.y > 100:
-                self.first = False
+            if self.y > 500:
+                self.y -= 10
+                if self.y < 1000:
+                    self.first = False
+            else:
+                self.y += 10
+                if self.y > 100:
+                    self.first = False
+
+
 
     def set_index(self, idx):
         self.index = idx
@@ -123,6 +130,13 @@ class Dice_manager:
             self.dicelist.append(Dice())
             self.dicelist[i].set_index(i)
             self.dicelist[i].set_position(x + (i * w), -500)
+
+    def push_dice_monster(self, num = 1, x = 1000, w = 150):
+        leng = len(self.dicelist)
+        for i in range(leng, leng + num):
+            self.dicelist.append(Dice())
+            self.dicelist[i].set_index(i)
+            self.dicelist[i].set_position(x + (i * w), 1500)
 
     def dice_clear(self):
         self.dicelist.clear()

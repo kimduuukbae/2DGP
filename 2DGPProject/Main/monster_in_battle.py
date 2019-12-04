@@ -28,6 +28,7 @@ class Inbattlemonster(Object):
     def get_item_list(self):
         return self.item_list
 
+
 class Slime(Inbattlemonster):
     def __init__(self):
         super().__init__("슬라임")
@@ -64,7 +65,7 @@ class BabySquid(Inbattlemonster):
         self.pivot = 10
         self.info = "새끼오징어는 기본 공격에 약합니다."
 
-        self.item_list = ["poison", "poison", "poison"]
+        self.item_list = ["poison", "inkattack", "inkattack"]
 
     def update(self):
         self.frameTime += game_framework.frame_time
@@ -72,7 +73,7 @@ class BabySquid(Inbattlemonster):
             self.frameTime = 0.0
             self.frame = (self.frame + 1)%10
 
-    def draw(self, x = 0, y = 0):
+    def draw(self, x=0, y=0):
         self.image.clip_draw(self.frame % 5 * self.imageWidth,(1 - (self.frame // 5)) * self.imageHeight,
                              self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
 
@@ -92,7 +93,6 @@ class Monsterstatus:
     img = None
     name = None
     item_list = None
-
 
     def __init__(self):
         if Monsterstatus.background_image is None and Monsterstatus.img is None:

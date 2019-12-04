@@ -1,6 +1,6 @@
 from object import *
 import pico2d
-import item
+
 
 class IdleState:
 
@@ -31,6 +31,7 @@ class WalkState:
                 hero.cur_state = IdleState
                 if len(hero.moveLists):
                     hero.move_to_tile(hero.moveLists)
+
 
 class BattleState:
     count = 0
@@ -107,7 +108,8 @@ class Hero(Object):
         self.x += value
 
 
-class Hero_status:
+
+class HeroStatus:
     hp = 24
     maxhp = 24  # 24 = 6 28 = 5.5 32 = 5
     pivot = 6
@@ -118,52 +120,51 @@ class Hero_status:
     equip_item = []
 
     def __init__(self):
-        if Hero_status.background_image is None and Hero_status.img is None:
-            Hero_status.background_image = pico2d.load_image("../Resources/common/hpbarback.png")
-            Hero_status.img = pico2d.load_image("../Resources/common/hpbar.png")
+        if HeroStatus.background_image is None and HeroStatus.img is None:
+            HeroStatus.background_image = pico2d.load_image("../Resources/common/hpbarback.png")
+            HeroStatus.img = pico2d.load_image("../Resources/common/hpbar.png")
 
-            Hero_status.equip_item.append("baseattack")
-            Hero_status.equip_item.append("ironshield")
-            Hero_status.equip_item.append("reloaddice")
+            HeroStatus.equip_item.append("baseattack")
+            HeroStatus.equip_item.append("ironshield")
+            HeroStatus.equip_item.append("reloaddice")
 
     @staticmethod
     def get_hp():
-        return Hero_status.hp
+        return HeroStatus.hp
 
     @staticmethod
     def set_hp(hp):
-        Hero_status.hp = hp
+        HeroStatus.hp = hp
 
     @staticmethod
     def set_maxhp(hp):
-        Hero_status.maxhp = hp
-        Hero_status.pivot -= 0.5
+        HeroStatus.maxhp = hp
+        HeroStatus.pivot -= 0.5
 
     @staticmethod
     def get_maxhp():
-        return Hero_status.maxhp
+        return HeroStatus.maxhp
 
     @staticmethod
     def draw(x, y):
-        Hero_status.background_image.draw(x, y)
-        Hero_status.img.draw(x - int((Hero_status.maxhp - Hero_status.hp) * Hero_status.pivot), y, \
-                             Hero_status.img.w - (int((Hero_status.img.w / Hero_status.maxhp) * (Hero_status.maxhp - Hero_status.hp))), \
-                             Hero_status.img.h)
+        HeroStatus.background_image.draw(x, y)
+        HeroStatus.img.draw(x - int((HeroStatus.maxhp - HeroStatus.hp) * HeroStatus.pivot), y, \
+                            HeroStatus.img.w - (int((HeroStatus.img.w / HeroStatus.maxhp) * (HeroStatus.maxhp - HeroStatus.hp))), \
+                            HeroStatus.img.h)
 
     @staticmethod
     def add_hp(value):
-        Hero_status.hp += value
+        HeroStatus.hp += value
 
     @staticmethod
     def add_shield(value):
-        Hero_status.shield += value
+        HeroStatus.shield += value
 
     @staticmethod
     def set_enemy_type(enemytype):
-        Hero_status.enemy_type = enemytype
+        HeroStatus.enemy_type = enemytype
 
     @staticmethod
-    def push_equip_item(item_name):
-        Hero_status.equip_item.append(item.itemfactory(item_name))
-        Hero_status.equip_item.pop(0)
-
+    def push_equip_item(item):
+        HeroStatus.equip_item.append(item)
+        HeroStatus.equip_item.pop(0)

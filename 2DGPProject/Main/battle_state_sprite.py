@@ -12,11 +12,13 @@ class Battle_state_sprite:
     banner = None
 
     def __init__(self):
-        self.hero = Hero_status()
+        self.hero = HeroStatus()
         self.monster = Monsterstatus()
         self.victory_flag = 0
         self.font = font()
         self.vertexX = 0
+        self.time_to_banner = 0.0
+
         if Battle_state_sprite.stage_image is None:
             Battle_state_sprite.stage_image = load_image("../Resources/battle/battle_gameshow.png")
         if Battle_state_sprite.back_image is None:
@@ -51,27 +53,25 @@ class Battle_state_sprite:
 
     def update(self):
         self.monstersprite.update()
+
         if self.victory_flag == 0:
-            if self.monster.hp <= 0:
+            if HeroStatus.hp <= 0 or Monsterstatus.hp <= 0:
                 self.victory_flag = 1
                 winsound.PlaySound('../Resources/battle/herowinsound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
-                                   winsound.SND_ASYNC)
-            elif self.hero.get_hp() <= 0:
-                self.victory_flag = 2
+                winsound.SND_ASYNC)
+
+        if self.victory_flag == 1:
+            self.time_to_banner += game_framework.frame_time
+            self.vertexX += 10
+            if self.time_to_banner > 2.0:
+                if HeroStatus.hp <= 0:
+                    self.victory_flag = 2
+                elif Monsterstatus.hp <= 0:
+                    self.victory_flag = 3
+                self.time_to_banner = 0.0
 
         if self.victory_flag == 3:
             Battle_state_sprite.banner.update()
-        if self.victory_flag == 1:
-            self.vertexX += 10
 
-    def getvictory(self):
+    def get_victory_flag(self):
         return self.victory_flag
-
-    def setdefeat(self):
-        self.victory_flag = 4
-
-    def setvictory(self):
-        self.victory_flag = 3
-
-    def clear_banner(self):
-        self.victory_flag = 0

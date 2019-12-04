@@ -3,7 +3,7 @@ from hero import *
 from font import *
 class main_state_spritelist:
     def __init__(self):
-        self.hero = Hero_status()
+        self.hero = HeroStatus()
         self.font = font()
         self.spriteList = []
         self.spriteList.append(o.Object('../Resources/stage/uiShader.png'))

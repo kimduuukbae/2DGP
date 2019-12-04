@@ -21,7 +21,7 @@ def collision_hero_object(hero_object, collision_object):
         if collision_object.get_type() == 1:
             collision_object.set_in_battle()
             hero_object.set_in_battle()
-            Hero_status().set_enemy_type(collision_object.get_name())
+            HeroStatus().set_enemy_type(collision_object.get_name())
         else:
             collision_object.push_event(WaitState)
             fadescene.Fade.push_event(fadescene.FadeInStage)
