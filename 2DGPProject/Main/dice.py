@@ -41,10 +41,11 @@ class Dice_image:
 class Dice:
     def __init__(self):
         self.dice, self.count = Dice_image().get_dice()
-        self.x, self.y = 0,0
+        self.x, self.y = 0, 0
         self.used = False
         self.first = True
         self.index = 0
+        self.try_fail = False
 
     def set_position(self, x, y):
         self.x = x
@@ -76,6 +77,12 @@ class Dice:
 
     def get_use(self):
         return self.used
+
+    def get_try_fail(self):
+        return self.try_fail
+
+    def set_try_fail(self):
+        self.try_fail = True
 
     def redice(self):
         del self.dice
@@ -119,10 +126,10 @@ class Dice_manager:
         for i in self.dicelist:
             i.update()
 
-    def collide_to_object(self, A):   # A must item
+    def collide_to_object(self, A, status):   # A must item
         for i in range(len(self.dicelist)):
             if not self.dicelist[i].get_use() and collision(A, self.dicelist[i]) and A.check_condition(self.dicelist[i]):
-                A.active(self.dicelist[i])
+                A.active(self.dicelist[i], status)
                 return True
 
     def collide_to_mouse(self, mouse):

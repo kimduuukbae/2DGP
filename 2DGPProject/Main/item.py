@@ -142,9 +142,9 @@ class BaseAttack(Item):
         self.imageheight = self.image.h
         self.rule = 'ANY'
 
-    def active(self, obj):
+    def active(self, obj, status):
         self.used = True
-        Monsterstatus().add_hp(-obj.get_count())
+        status.add_hp(-obj.get_count())
         obj.set_use()
 
 
@@ -161,10 +161,10 @@ class IronShield(Item):
         self.rule = 'MAX'
         self.rule_count = 4
 
-    def active(self, obj):
+    def active(self, obj, status):
         self.used = True
         obj.set_use()
-        HeroStatus.add_shield(obj.get_count())
+        status.add_shield(obj.get_count())
 
 
 class ReloadDice(Item):
@@ -180,7 +180,7 @@ class ReloadDice(Item):
         self.imageheight = self.image.h
         self.rule = 'ANY'
 
-    def active(self, obj):
+    def active(self, obj, status):
         obj.set_use()
         obj.redice()
         self.count = self.count - 1
@@ -206,9 +206,9 @@ class Poison(Item):
         self.imageheight = self.image.h
         self.rule = 'ANY'
 
-    def active(self, obj):
+    def active(self, obj, status):
         self.used = True
-        #Monsterstatus().add_hp(-obj.get_count())
+        status.add_hp(-2)
         obj.set_use()
 
 class InkAttack(Item):
@@ -224,9 +224,9 @@ class InkAttack(Item):
         self.rule = 'BELOW'
         self.rule_count = 3
 
-    def active(self, obj):
+    def active(self, obj, status):
         self.used = True
-        Monsterstatus().add_hp(-obj.get_count())
+        status.add_hp(-1)
         obj.set_use()
 
 

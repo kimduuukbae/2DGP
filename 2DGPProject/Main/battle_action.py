@@ -30,12 +30,13 @@ class EnemyTurn:
         EnemyTurn.item.update()
         EnemyTurn.dice.update()
         if EnemyTurn.is_ai_using is False:
-            if EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_use():
+            if EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_use() or \
+                EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_try_fail():
                 EnemyTurn.ai_change_turn = True
                 EnemyTurn.is_ai_using = True
 
             for i in EnemyTurn.dice.dicelist:
-                if i.get_use():
+                if i.get_use() or i.get_try_fail():
                     continue
 
                 for j in EnemyTurn.item.getlist():
@@ -49,6 +50,7 @@ class EnemyTurn:
                         break
                 if EnemyTurn.is_ai_using:
                     break
+                i.set_try_fail()
 
         if EnemyTurn.is_ai_using:
             EnemyTurn.ai_time += game_framework.frame_time
@@ -60,7 +62,7 @@ class EnemyTurn:
                         EnemyTurn.ai_to_distance_x, EnemyTurn.ai_to_distance_y)
 
                     for i in range(len(EnemyTurn.item.itemlist)):
-                        if EnemyTurn.dice.collide_to_object(EnemyTurn.item.itemlist[i]):
+                        if EnemyTurn.dice.collide_to_object(EnemyTurn.item.itemlist[i], HeroStatus):
                             EnemyTurn.item.itemlist.pop(i)
                             EnemyTurn.is_ai_using = False
                             EnemyTurn.ai_time = 0.0
@@ -99,7 +101,7 @@ class HeroTurn:
             HeroTurn.dice.get_dice_to_idx(obj.click_dice_idx).set_position(
                 obj.mouse_x_pos, obj.mouse_y_pos)
             for i in HeroTurn.item.itemlist:
-                if HeroTurn.dice.collide_to_object(i):
+                if HeroTurn.dice.collide_to_object(i, Monsterstatus):
                     obj.click_dice_idx = -1
 
         HeroTurn.dice.update()
