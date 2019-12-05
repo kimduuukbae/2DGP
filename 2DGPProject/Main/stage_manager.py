@@ -13,6 +13,11 @@ class StageManager:
             StageManager.stage_list = [stage1, stage2, stage3]
             StageManager.cur_stage = StageManager.stage_list[StageManager.stage_idx]
 
+
+    @staticmethod
+    def get_stage_idx():
+        return StageManager.stage_idx
+
     @staticmethod
     def enter():
         StageManager.cur_stage.enter()

@@ -34,7 +34,7 @@ class Dice_image:
 
     @staticmethod
     def get_dice():
-        temp = random.randint(1, 5)
+        temp = random.randint(0, 5)
         return Dice_image.dicelist[temp], temp + 1
 
 
@@ -50,6 +50,13 @@ class Dice:
         self.x = x
         self.y = y
 
+    def get_position(self):
+        return self.x, self.y
+
+    def add_position(self, x, y):
+        self.x += x
+        self.y += y
+
     def draw(self):
         if not self.used:
             self.dice.draw(self.x, self.y)
@@ -60,6 +67,9 @@ class Dice:
 
     def get_count(self):
         return self.count
+
+    def get_index(self):
+        return self.index
 
     def set_use(self):
         self.used = True
@@ -111,7 +121,7 @@ class Dice_manager:
 
     def collide_to_object(self, A):   # A must item
         for i in range(len(self.dicelist)):
-            if not self.dicelist[i].get_use() and collision(A, self.dicelist[i]):
+            if not self.dicelist[i].get_use() and collision(A, self.dicelist[i]) and A.check_condition(self.dicelist[i]):
                 A.active(self.dicelist[i])
                 return True
 

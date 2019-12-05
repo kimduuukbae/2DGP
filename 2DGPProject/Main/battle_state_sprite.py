@@ -3,12 +3,13 @@ from font import *
 from monster_in_battle import *
 import winsound
 import banner
-
+import main_state
 
 class Battle_state_sprite:
-    stage_image = None
+    stage_image = []
     back_image = None
     info_image = None
+
     banner = None
 
     def __init__(self):
@@ -19,8 +20,9 @@ class Battle_state_sprite:
         self.vertexX = 0
         self.time_to_banner = 0.0
 
-        if Battle_state_sprite.stage_image is None:
-            Battle_state_sprite.stage_image = load_image("../Resources/battle/battle_gameshow.png")
+        if len(Battle_state_sprite.stage_image) == 0:
+            Battle_state_sprite.stage_image.append(load_image("../Resources/battle/battle_gameshow.png"))
+            Battle_state_sprite.stage_image.append(load_image("../Resources/battle/battle_ice.png"))
         if Battle_state_sprite.back_image is None:
             Battle_state_sprite.back_image = load_image("../Resources/battle/warrior_back.png")
         if Battle_state_sprite.banner is None:
@@ -32,7 +34,7 @@ class Battle_state_sprite:
         Battle_state_sprite.banner.init()
 
     def draw(self):
-        Battle_state_sprite.stage_image.draw(960, 540)
+        Battle_state_sprite.stage_image[main_state.stage_collection.get_stage_idx()].draw(960, 540)
         Battle_state_sprite.back_image.draw(200, 170)
 
         self.hero.draw(600,100)

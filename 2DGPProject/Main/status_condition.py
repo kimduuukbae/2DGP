@@ -24,5 +24,13 @@ class StatusCondition:
         self.condition_list = []        # 전투 오브젝트들이 현재 턴에 가진 상태이상
 
     def active_condition(self, obj):
-        for i in self.condition_list:
-            i.active(obj)
+        for i in range(len(self.condition_list)):
+            self.condition_list[i].active(obj)
+            if self.condition_list[i].get_count() == 0:
+                self.condition_list.pop(i)
+
+    def add_condition(self, condition):
+        if condition in self.condition_list:
+            self.condition_list.index(condition).add_count(condition.get_count())
+        else:
+            self.condition_list.append(condition)

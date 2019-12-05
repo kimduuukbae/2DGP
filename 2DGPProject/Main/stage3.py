@@ -64,16 +64,16 @@ def handle_events():
                     pass
                 for i in map_list:
                     if i.click_tile(x, y):
-                        clear_maplist()
                         tile_x, tile_y, tile_id = i.get_tileinfo()
-                        if tile_id == character.get_id():
+                        if tile_id == character.get_id() or character.get_moving():
                             break
+                        clear_maplist()
                         for j in map_list:
                             j.set_visited(False)
                         if check_map(character.get_id(), tile_id):
                             insert_map(map_list, character.get_id(), tile_id)
                             character.move_to_tile(get_maplist())
-                        break
+                            break
             if event.type == SDL_MOUSEMOTION:
                 x = event.x
                 y = 1080 - 1 - event.y

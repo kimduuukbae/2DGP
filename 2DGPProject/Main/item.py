@@ -4,7 +4,9 @@ from monster_in_battle import Monsterstatus
 import game_framework
 from hero import *
 
-class item:
+ITEM_RULE = {'MAX': '최대', "BELOW": "이하", "ANY": "아무나", "COUNT": "합"}
+
+class Item:
     volX = 30
     volY = 30
     collisionImage = None
@@ -13,8 +15,8 @@ class item:
         self.itemName = None
         self.itemInfo = None
         self.image = None
-        if item.collisionImage == None:
-            item.collisionImage = pico2d.load_image('../Resources/common/itemcollisionbox.png')
+        if Item.collisionImage == None:
+            Item.collisionImage = pico2d.load_image('../Resources/common/itemcollisionbox.png')
         self.x = -100
         self.y = 540
         self.imagewidth = 0
@@ -29,19 +31,30 @@ class item:
         self.effecttime = 0.0
         self.effectdir = -1
         self.exitturn = False
+        self.rule = None
+        self.rule_count = 0
 
         self.dir = 1    # dir == 1 : hero, dir == -1 : monster
+
+    def get_use(self):
+        return self.used
+
     def draw(self):
         self.image.draw(self.x,self.y, self.imagewidth, self.imageheight)
         self.namefont.draw(self.x + self.pivotItemName,self.y + 120,self.itemName,(255,255,255))
         self.namefont.draw(self.x + self.pivotItemInfo,self.y - 100,self.itemInfo,(255,255,255))
-        item.collisionImage.draw(self.x, self.y)
+        Item.collisionImage.draw(self.x, self.y)
+        if self.rule is not 'ANY':
+            self.namefont.draw(self.x - 30, self.y + 40, ITEM_RULE[self.rule], (255, 255, 255))
+            self.namefont.draw(self.x - 10, self.y, str(self.rule_count), (255, 255, 255))
+
     def get_box(self):
-        return self.x - item.collisionImage.w //2, self.y - item.collisionImage.h //2,\
-               self.x + item.collisionImage.w //2, self.y + item.collisionImage.h //2
+        return self.x - Item.collisionImage.w // 2, self.y - Item.collisionImage.h // 2, \
+               self.x + Item.collisionImage.w // 2, self.y + Item.collisionImage.h // 2
 
     def active(self, obj):
         pass
+
     def update(self):
         if self.dir == 1:
             if self.turnFirst:
@@ -76,9 +89,11 @@ class item:
                     self.effectdir = -self.effectdir
                     self.effect = False
                 self.effecttime = 0.0
-    def setexitturn(self):
+
+    def set_exit_turn(self):
         if not self.used:
             self.exitturn = True
+
     def first(self):
         self.x = self.startX
         self.used = False
@@ -87,16 +102,32 @@ class item:
 
     def reuse(self):
         self.first()
-    def enemyset(self):
+
+    def set_enemy_turn(self):
         self.dir = -1
+
     def setx(self,x1,x2):
         self.x = x1
         self.startX = x1
         self.stopX = x2
+
     def add_x_position(self, x):
         self.x += x
 
-class BaseAttack(item):
+    def check_condition(self, object_dice):
+        if self.rule == 'MAX':
+            if object_dice.get_count() > self.rule_count:
+                return False
+        elif self.rule == 'BELOW':
+            if object_dice.get_count() > self.rule_count:
+                return False
+
+        return True
+
+    def get_position(self):
+        return self.x, self.y
+
+class BaseAttack(Item):
     def __init__(self):
         super().__init__()
         self.x = -800
@@ -109,13 +140,15 @@ class BaseAttack(item):
         self.startX = -800
         self.imagewidth = self.image.w
         self.imageheight = self.image.h
+        self.rule = 'ANY'
+
     def active(self, obj):
         self.used = True
         Monsterstatus().add_hp(-obj.get_count())
         obj.set_use()
 
 
-class IronShield(item):
+class IronShield(Item):
     def __init__(self):
         super().__init__()
         self.itemName = "철 방패"
@@ -125,6 +158,8 @@ class IronShield(item):
         self.pivotItemInfo = -140
         self.imagewidth = self.image.w
         self.imageheight = self.image.h
+        self.rule = 'MAX'
+        self.rule_count = 4
 
     def active(self, obj):
         self.used = True
@@ -132,7 +167,7 @@ class IronShield(item):
         HeroStatus.add_shield(obj.get_count())
 
 
-class ReloadDice(item):
+class ReloadDice(Item):
     def __init__(self):
         super().__init__()
         self.count = 3
@@ -143,6 +178,7 @@ class ReloadDice(item):
         self.pivotItemInfo = -160
         self.imagewidth = self.image.w
         self.imageheight = self.image.h
+        self.rule = 'ANY'
 
     def active(self, obj):
         obj.set_use()
@@ -152,12 +188,13 @@ class ReloadDice(item):
         self.effect = True
         if self.count == 0:
             self.used = True
+
     def first(self):
         super().first()
         self.count = 3
         self.itemInfo = "주사위를 " + str(self.count) + "회 다시 굴린다."
 
-class Poison(item):
+class Poison(Item):
     def __init__(self):
         super().__init__()
         self.itemName = "중독"
@@ -167,13 +204,14 @@ class Poison(item):
         self.pivotItemInfo = -100
         self.imagewidth = self.image.w
         self.imageheight = self.image.h
+        self.rule = 'ANY'
 
     def active(self, obj):
         self.used = True
-        Monsterstatus().add_hp(-obj.get_count())
+        #Monsterstatus().add_hp(-obj.get_count())
         obj.set_use()
 
-class InkAttack(item):
+class InkAttack(Item):
     def __init__(self):
         super().__init__()
         self.itemName = "먹물 공격"
@@ -183,11 +221,14 @@ class InkAttack(item):
         self.pivotItemInfo = -155
         self.imagewidth = self.image.w
         self.imageheight = self.image.h
+        self.rule = 'BELOW'
+        self.rule_count = 3
 
     def active(self, obj):
         self.used = True
         Monsterstatus().add_hp(-obj.get_count())
         obj.set_use()
+
 
 ITEM_LIST = {"baseattack" : BaseAttack, "reloaddice" : ReloadDice, "ironshield" : IronShield, "poison" : Poison,
              "inkattack" : InkAttack}
@@ -218,7 +259,7 @@ class item_manager:
             self.itemlist[-1].setx(self.startX, self.stopX + ((len(self.itemlist)-1)*500))
         else:
             self.itemlist[-1].setx(self.startX, self.stopX - ((len(self.itemlist) - 1) * 500))
-            self.itemlist[-1].enemyset()
+            self.itemlist[-1].set_enemy_turn()
 
     def push_item_list(self, item_list):
         for i in item_list:
@@ -228,7 +269,7 @@ class item_manager:
                 self.itemlist[-1].setx(self.startX, self.stopX + ((len(self.itemlist) - 1) * 500))
             else:
                 self.itemlist[-1].setx(self.startX, self.stopX - ((len(self.itemlist) - 1) * 500))
-                self.itemlist[-1].enemyset()
+                self.itemlist[-1].set_enemy_turn()
 
     def draw(self):
         for i in self.itemlist:
@@ -243,7 +284,7 @@ class item_manager:
 
     def changeturn(self):
         for i in self.itemlist:
-            i.setexitturn()
+            i.set_exit_turn()
 
     def item_clear(self):
         self.itemlist.clear()

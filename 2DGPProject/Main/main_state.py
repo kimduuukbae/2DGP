@@ -1,5 +1,5 @@
 import stage_manager
-
+import hero
 stage_collection = None
 
 
@@ -30,4 +30,5 @@ def pause():
 
 
 def resume():
+    hero.HeroStatus.shield = 0
     stage_collection.resume()

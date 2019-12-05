@@ -1,6 +1,6 @@
 from object import *
 import pico2d
-
+from status_condition import *
 
 class IdleState:
 
@@ -118,6 +118,7 @@ class HeroStatus:
     img = None
     enemy_type = None
     equip_item = []
+    status_condition = StatusCondition()
 
     def __init__(self):
         if HeroStatus.background_image is None and HeroStatus.img is None:

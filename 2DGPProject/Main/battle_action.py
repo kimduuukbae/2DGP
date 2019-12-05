@@ -9,16 +9,64 @@ class EnemyTurn:
 
     item = item_manager("monster")
 
+    is_ai_using = False
+
+    ai_to_distance_x = 0
+    ai_to_distance_y = 0
+    ai_dice_idx = -1
+
+    ai_time = 0.0
+
+    ai_change_turn = False
     @staticmethod
     def enter(obj):
         EnemyTurn.item.push_item_list(monster_in_battle.Monsterstatus.item_list)
         EnemyTurn.dice.push_dice_monster(3)
+        EnemyTurn.is_ai_using = False
         pass
 
     @staticmethod
     def update(obj):
         EnemyTurn.item.update()
         EnemyTurn.dice.update()
+        if EnemyTurn.is_ai_using is False:
+            if EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_use():
+                EnemyTurn.ai_change_turn = True
+                EnemyTurn.is_ai_using = True
+
+            for i in EnemyTurn.dice.dicelist:
+                if i.get_use():
+                    continue
+
+                for j in EnemyTurn.item.getlist():
+                    if j.check_condition(i):
+                        EnemyTurn.is_ai_using = True
+                        to_x, to_y = j.get_position()
+                        origin_x, origin_y = i.get_position()
+                        EnemyTurn.ai_to_distance_x = (to_x - origin_x) / 100
+                        EnemyTurn.ai_to_distance_y = (to_y - origin_y) / 100
+                        EnemyTurn.ai_dice_idx = i.get_index()
+                        break
+                if EnemyTurn.is_ai_using:
+                    break
+
+        if EnemyTurn.is_ai_using:
+            EnemyTurn.ai_time += game_framework.frame_time
+            if EnemyTurn.ai_time > 1.0:
+                if EnemyTurn.ai_change_turn:
+                    obj.change_turn()
+                else:
+                    EnemyTurn.dice.get_dice_to_idx(EnemyTurn.ai_dice_idx).add_position(
+                        EnemyTurn.ai_to_distance_x, EnemyTurn.ai_to_distance_y)
+
+                    for i in range(len(EnemyTurn.item.itemlist)):
+                        if EnemyTurn.dice.collide_to_object(EnemyTurn.item.itemlist[i]):
+                            EnemyTurn.item.itemlist.pop(i)
+                            EnemyTurn.is_ai_using = False
+                            EnemyTurn.ai_time = 0.0
+                            break
+
+
 
     @staticmethod
     def draw(obj):
@@ -29,6 +77,8 @@ class EnemyTurn:
     def exit(obj):
         EnemyTurn.dice.dice_clear()
         EnemyTurn.item.item_clear()
+        EnemyTurn.ai_change_turn = False
+        EnemyTurn.ai_time = 0.0
         pass
 
 
@@ -66,6 +116,7 @@ class HeroTurn:
         HeroTurn.dice.dice_clear()
         HeroTurn.item.item_clear()
         pass
+
 
 class ExitState:
     @staticmethod

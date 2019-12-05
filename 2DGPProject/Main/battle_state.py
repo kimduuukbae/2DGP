@@ -1,19 +1,13 @@
 from fadescene import *
 import battle_state_sprite
 import winsound
-from item import *
-from dice import *
 from button import *
-import hero
-import monster_in_battle
 from battle_action import *
+
 sprites = None
-
 turnbtn = None
-
-
-
 battle_action = None
+
 
 def enter():
     global sprites, turnbtn, battle_action
@@ -29,7 +23,6 @@ def enter():
 
 def exit():
     battle_action.action_clear()
-    pass
 
 
 def handle_events():
