@@ -1,9 +1,8 @@
 import hero
-import monster_in_battle
+from monster_in_battle import *
 from item import *
 from dice import *
-
-
+from battle_state_sprite import *
 class EnemyTurn:
     dice = Dice_manager(0)
 
@@ -20,10 +19,11 @@ class EnemyTurn:
     ai_change_turn = False
     @staticmethod
     def enter(obj):
-        EnemyTurn.item.push_item_list(monster_in_battle.Monsterstatus.item_list)
+        EnemyTurn.item.push_item_list(Monsterstatus.item_list)
         EnemyTurn.dice.push_dice_monster(3)
         EnemyTurn.is_ai_using = False
-        pass
+        Monsterstatus.m_status_conditon.active_condition(Monsterstatus)
+
 
     @staticmethod
     def update(obj):
@@ -66,9 +66,8 @@ class EnemyTurn:
                             EnemyTurn.item.itemlist.pop(i)
                             EnemyTurn.is_ai_using = False
                             EnemyTurn.ai_time = 0.0
+                            Battle_state_sprite.set_shake(5)
                             break
-
-
 
     @staticmethod
     def draw(obj):
@@ -92,6 +91,7 @@ class HeroTurn:
     def enter(obj):
         HeroTurn.item.push_item_list(hero.HeroStatus.equip_item)
         HeroTurn.dice.push_dice(3)
+        HeroStatus.status_condition.active_condition(HeroStatus)
         pass
 
     @staticmethod
@@ -103,6 +103,9 @@ class HeroTurn:
             for i in HeroTurn.item.itemlist:
                 if HeroTurn.dice.collide_to_object(i, Monsterstatus):
                     obj.click_dice_idx = -1
+                    Battle_state_sprite.set_shake(5)
+
+
 
         HeroTurn.dice.update()
         pass

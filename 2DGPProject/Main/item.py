@@ -1,9 +1,7 @@
 from font import *
-import pico2d
-from monster_in_battle import Monsterstatus
 import game_framework
 from hero import *
-
+from status_condition import *
 ITEM_RULE = {'MAX': '최대', "BELOW": "이하", "ANY": "아무나", "COUNT": "합"}
 
 class Item:
@@ -164,7 +162,7 @@ class IronShield(Item):
     def active(self, obj, status):
         self.used = True
         obj.set_use()
-        status.add_shield(obj.get_count())
+        HeroStatus.add_shield(obj.get_count())
 
 
 class ReloadDice(Item):
@@ -208,7 +206,7 @@ class Poison(Item):
 
     def active(self, obj, status):
         self.used = True
-        status.add_hp(-2)
+        status.get_condition().add_condition("독", 2)
         obj.set_use()
 
 class InkAttack(Item):
@@ -226,7 +224,8 @@ class InkAttack(Item):
 
     def active(self, obj, status):
         self.used = True
-        status.add_hp(-1)
+        status.add_hp(-status.min_shield(1))
+        status.get_condition().add_condition("독", 1)
         obj.set_use()
 
 

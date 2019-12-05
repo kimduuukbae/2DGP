@@ -1,6 +1,6 @@
 from object import *
 import game_framework
-
+from status_condition import *
 
 class Inbattlemonster(Object):
     def __init__(self, name):
@@ -49,7 +49,7 @@ class Slime(Inbattlemonster):
             self.frameTime = 0.0
             self.frame = (self.frame + 1)%10
 
-    def draw(self, x = 0, y = 0):
+    def draw(self, x=0, y=0):
         self.image.clip_draw(self.frame % 5 * self.imageWidth,(1 - (self.frame // 5)) * self.imageHeight,
                              self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
 
@@ -93,12 +93,16 @@ class Monsterstatus:
     img = None
     name = None
     item_list = None
+    m_status_conditon = StatusCondition()
 
     def __init__(self):
         if Monsterstatus.background_image is None and Monsterstatus.img is None:
             Monsterstatus.background_image = pico2d.load_image("../Resources/common/hpbarback.png")
             Monsterstatus.img = pico2d.load_image("../Resources/common/hpbar.png")
 
+    @staticmethod
+    def get_condition():
+        return Monsterstatus.m_status_condition
 
     @staticmethod
     def set_status(obj):

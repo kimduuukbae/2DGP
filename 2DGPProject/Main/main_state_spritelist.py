@@ -18,11 +18,12 @@ class main_state_spritelist:
         for i in self.spriteList:
             i.draw()
         self.hero.draw(400,100)
-        self.font.draw(250,160,"전사", (255,255,255))
+        self.font.draw(250,160, "전사", (255,255,255))
         self.font.draw(355, 102, str(self.hero.get_hp()) + ' / ' + str(self.hero.get_maxhp()), (255, 255, 255))
 
     def reset(self):
         self.hero.shield = 0
+        self.hero.get_condition().clear_condition()
 
     def add_image(self, string):
         self.spriteList.insert(0, o.Object(string))

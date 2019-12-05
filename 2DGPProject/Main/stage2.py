@@ -36,7 +36,7 @@ def enter():
     collision_object_list.append(BabySquid())
     collision_object_list[0].set_position(550, 850)
 
-    map_list, bridge_list = make_map()
+    map_list, bridge_list = make_map(2)
     character.set_position(300, 600)
     character.set_image_pivot(20, 50)
     character.set_image_size(260, 150)

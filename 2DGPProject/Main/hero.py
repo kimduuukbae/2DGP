@@ -134,6 +134,10 @@ class HeroStatus:
         return HeroStatus.hp
 
     @staticmethod
+    def get_condition():
+        return HeroStatus.status_condition
+
+    @staticmethod
     def set_hp(hp):
         HeroStatus.hp = hp
 
@@ -160,6 +164,15 @@ class HeroStatus:
     @staticmethod
     def add_shield(value):
         HeroStatus.shield += value
+
+    @staticmethod
+    def min_shield(value):
+        HeroStatus.shield -= value
+        if HeroStatus.shield < 0:
+            count = HeroStatus.shield
+            HeroStatus.shield = 0
+            return -count
+        return 0
 
     @staticmethod
     def set_enemy_type(enemytype):

@@ -32,12 +32,10 @@ def enter():
     global character, map_list, bridge_list, sprite_list
     character = Hero('../Resources/stage/character.png')
     sprite_list = main_state_spritelist()
-    sprite_list.add_image('../Resources/stage/stageArea.png')
-    collision_object_list.append(Slime())
-    collision_object_list[0].set_position(550, 850)
+    sprite_list.add_image('../Resources/stage/finale1.png')
 
-    map_list, bridge_list = make_map()
-    character.set_position(300, 600)
+    map_list, bridge_list = make_map(3)
+    character.set_position(960, 300)
     character.set_image_pivot(20, 50)
     character.set_image_size(260, 150)
 
@@ -57,6 +55,7 @@ def handle_events():
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
+
             if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
                 x = event.x
                 y = 1080 - 1 - event.y

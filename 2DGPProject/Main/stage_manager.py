@@ -11,7 +11,7 @@ class StageManager:
     def __init__(self):
         if StageManager.cur_stage is None:
             StageManager.stage_list = [stage1, stage2, stage3]
-            StageManager.cur_stage = StageManager.stage_list[StageManager.stage_idx]
+            StageManager.cur_stage = StageManager.stage_list[0]
 
 
     @staticmethod

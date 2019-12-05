@@ -83,10 +83,10 @@ class Mapbridge(Object):
         Mapbridge.image.rotate_draw(self.radian, self.x, self.y, self.imageWidth, self.imageHeight)
 
 
-def make_map():
+def make_map(count):
     map_list = []
     bridge_list = []
-    f = open('../Resources/stage/mapText.txt', 'r')
+    f = open('../Resources/stage/mapText' + str(count) + '.txt', 'r')
     idx = 0
     while True:
         line = f.readline().split(' ')
@@ -100,7 +100,7 @@ def make_map():
         map_list[idx].set_frame(0, 140)
         idx += 1
     f.close()
-    f = open('../Resources/stage/mapVertex.txt', 'r')
+    f = open('../Resources/stage/mapVertex' + str(count) + '.txt', 'r')
     idx = 0
     while True:
         line = f.readline().split(' ')
@@ -116,14 +116,18 @@ def make_map():
         map_list[end_id-1].set_connect_map(x1, y1, id1)
         rad = math.atan2(y2 - y1, x2 - x1)
         bridge_list[idx].set_radian(rad)
-        if x1 >= x2:
-            x1 -= 125
-        else:
-            x1 += 125
-        if y1 >= y2:
-            y1 -= 125
-        else:
+        if x1 == x2:
             y1 += 125
+
+        else:
+            if x1 >= x2:
+                x1 -= 125
+            else:
+                x1 += 125
+            if y1 >= y2:
+                y1 -= 125
+            else:
+                y1 += 125
         bridge_list[idx].set_position(x1, y1)
         idx += 1
     return map_list, bridge_list

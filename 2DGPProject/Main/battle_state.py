@@ -35,7 +35,7 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             if event.key == SDLK_o:
-                battle_action.change_turn()
+                sprites.set_shake(5)
 
         if event.type == SDL_MOUSEMOTION:
             x = event.x

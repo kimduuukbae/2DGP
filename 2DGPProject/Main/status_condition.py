@@ -1,7 +1,9 @@
 # 상태이상에 대한 내용을 작성합니다.
 
 
+
 class ConditionPoison:  # 독 상태이상
+
     def __init__(self, count):
         self.count = count
 
@@ -12,14 +14,23 @@ class ConditionPoison:  # 독 상태이상
         self.count -= value
 
     def active(self, obj):
-        obj.sethp(obj.gethp()-1)
-        self.min_count(-1)
+        obj.add_hp(-obj.min_shield(self.count))
+        self.min_count(1)
 
     def get_count(self):
         return self.count
 
+    @staticmethod
+    def get_type():
+        return ConditionPoison
+
+
+STATUS_CONDITION = {ConditionPoison: "독"}
+STATUS_CONDITION_NAME = {"독": ConditionPoison}
+
 
 class StatusCondition:
+
     def __init__(self):
         self.condition_list = []        # 전투 오브젝트들이 현재 턴에 가진 상태이상
 
@@ -29,8 +40,20 @@ class StatusCondition:
             if self.condition_list[i].get_count() == 0:
                 self.condition_list.pop(i)
 
-    def add_condition(self, condition):
-        if condition in self.condition_list:
-            self.condition_list.index(condition).add_count(condition.get_count())
-        else:
-            self.condition_list.append(condition)
+    def add_condition(self, condition, count):
+        for i in self.condition_list:
+            if STATUS_CONDITION_NAME[condition] == i.get_type():
+                i.add_count(count)
+                return None
+
+        self.condition_list.append(STATUS_CONDITION_NAME[condition](count))
+
+    def get_condition_list(self):
+        return self.condition_list
+
+    def get_condition_to_idx(self, idx):
+        return self.condition_list[idx]
+
+    def clear_condition(self):
+        self.condition_list.clear()
+

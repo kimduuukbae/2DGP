@@ -8,6 +8,7 @@ class Object:
             self.image = pico2d.load_image(image_name)
             self.imageWidth = self.image.w
             self.imageHeight = self.image.h
+
         self.x = 0
         self.y = 0
         self.clipWidth = 0

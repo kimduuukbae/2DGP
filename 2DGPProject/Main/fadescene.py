@@ -53,6 +53,23 @@ class FadeInStage:
             fadeobj.push_event(FadeOut)
             stage_manager.StageManager.next_stage()
 
+
+class FadeTwinkle:
+
+    time = 0.0
+    @staticmethod
+    def enter(fadeobj):
+        fadeobj.x = 960.0
+
+    @staticmethod
+    def do(fadeobj):
+        FadeTwinkle.time += game_framework.frame_time
+        if FadeTwinkle.time > 0.1:
+            FadeTwinkle.time = 0.0
+            fadeobj.cur_state = Idle
+            fadeobj.x = -960.0
+
+
 class FadeOut:
     @staticmethod
     def enter(fadeobj):
