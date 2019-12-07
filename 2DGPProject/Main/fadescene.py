@@ -64,7 +64,7 @@ class FadeTwinkle:
     @staticmethod
     def do(fadeobj):
         FadeTwinkle.time += game_framework.frame_time
-        if FadeTwinkle.time > 0.1:
+        if FadeTwinkle.time > 0.2:
             FadeTwinkle.time = 0.0
             fadeobj.cur_state = Idle
             fadeobj.x = -960.0

@@ -14,17 +14,27 @@ banner_list = []
 fade_object = None
 sprite_list = None
 
+finale_flag = False
+finale_time = 0.0
+
 
 def collision_hero_object(hero_object, collision_object):
+    global finale_flag
     if hero_object.get_id() == collision_object.get_id() and \
     not hero_object.get_in_battle() and not collision_object.get_in_battle():
         if collision_object.get_type() == 1:
             collision_object.set_in_battle()
             hero_object.set_in_battle()
-            HeroStatus().set_enemy_type(collision_object.get_name())
-        else:
-            collision_object.push_event(WaitState)
-            fadescene.Fade.push_event(fadescene.FadeInStage)
+            HeroStatus.set_enemy_type(collision_object.get_name())
+        elif collision_object.get_type() == 3 and finale_flag is False:
+            hero_object.add_event(WaitState)
+            fadescene.Fade.push_event(fadescene.FadeTwinkle)
+            sprite_list.list_pop()
+            sprite_list.add_image('../Resources/stage/finale2.png')
+            sprite_list.set_shake(40)
+            finale_flag = True
+            hero_object.set_in_battle()
+            HeroStatus.set_enemy_type(collision_object.get_name())
 
 
 def enter():
@@ -33,6 +43,9 @@ def enter():
     character = Hero('../Resources/stage/character.png')
     sprite_list = main_state_spritelist()
     sprite_list.add_image('../Resources/stage/finale1.png')
+
+    collision_object_list.append(FinaleBoss())
+    collision_object_list[0].set_position(960, 550)
 
     map_list, bridge_list = make_map(3)
     character.set_position(960, 300)
@@ -81,6 +94,7 @@ def handle_events():
 
 
 def update():
+    global finale_flag, finale_time
     character.update()
     for i in collision_object_list:
         i.update()
@@ -88,6 +102,14 @@ def update():
     for i in banner_list:
         i.update()
     fadescene.Fade.update()
+    sprite_list.update()
+    if finale_flag:
+        finale_time += game_framework.frame_time
+        if finale_time > 2.0:
+            finale_flag = False
+            finale_time = 0.0
+            collision_object_list[0].set_in_battle()
+
 
 
 def draw():

@@ -61,6 +61,16 @@ class ExitState:
         if ExitState.count > 20:
             hero.event_que.append(IdleState)
 
+class WaitState:
+
+    @staticmethod
+    def enter(hero):
+        pass
+
+    @staticmethod
+    def do(hero):
+        pass
+
 class Hero(Object):
     def __init__(self, image_name = None):
         super().__init__(image_name)
@@ -99,13 +109,16 @@ class Hero(Object):
         return self.cur_state == WalkState
 
     def get_in_battle(self):
-        return self.cur_state == BattleState
+        return self.cur_state == BattleState or self.cur_state == WaitState
 
     def set_in_battle(self):
         self.event_que.append(BattleState)
 
     def add_position_x(self, value):
         self.x += value
+
+    def add_event(self, event):
+        self.event_que.append(event)
 
 
 

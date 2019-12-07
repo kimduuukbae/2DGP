@@ -3,8 +3,12 @@ import object as o
 import random as r
 import game_framework
 import main_state
+import battle_state_sprite
 import winsound
 import fadescene
+
+
+
 name = "TitleState"
 background = None
 char = None
@@ -99,6 +103,7 @@ def enter():
     oList[6].set_clip_size(608, 150)
     winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
                        winsound.SND_LOOP | winsound.SND_ASYNC)
+    battle_state_sprite.Battle_state_sprite.set_init()
 
 
 def exit():

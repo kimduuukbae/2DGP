@@ -20,8 +20,8 @@ class Object:
     def update(self):
         pass
 
-    def draw(self):
-        self.image.draw(self.x + self.pivotX, self.y + self.pivotY, self.imageWidth, self.imageHeight)
+    def draw(self, x=0, y=0):
+        self.image.draw(self.x + self.pivotX + x, self.y + self.pivotY + y, self.imageWidth, self.imageHeight)
 
     def set_position(self, x, y):
         self.x = x

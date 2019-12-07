@@ -21,15 +21,15 @@ class Battle_state_sprite:
         self.victory_flag = 0
         self.font = font()
         self.vertexX = 0
+        self.vertexY = 0
         self.time_to_banner = 0.0
 
         self.shake_float = 0.0
-        self.shake_flag = False
-        self.shake_power = 7.0
 
         if len(Battle_state_sprite.stage_image) == 0:
             Battle_state_sprite.stage_image.append(load_image("../Resources/battle/battle_gameshow.png"))
             Battle_state_sprite.stage_image.append(load_image("../Resources/battle/battle_ice.png"))
+            Battle_state_sprite.stage_image.append(load_image("../Resources/battle/finale_back.png"))
         if Battle_state_sprite.back_image is None:
             Battle_state_sprite.back_image = load_image("../Resources/battle/warrior_back.png")
         if Battle_state_sprite.banner is None:
@@ -39,11 +39,12 @@ class Battle_state_sprite:
 
         self.monstersprite = make_monster(self.hero.enemy_type)
         self.monster.set_status(self.monstersprite)
-
+        if main_state.stage_collection.get_stage_idx() == 2:
+            self.vertexY = 240
         Battle_state_sprite.banner.init()
 
     def draw(self):
-        Battle_state_sprite.stage_image[main_state.stage_collection.get_stage_idx()].draw(960+ self.shake_float, 540+ self.shake_float)
+        Battle_state_sprite.stage_image[main_state.stage_collection.get_stage_idx()].draw(960+ self.shake_float, 540+ self.shake_float + self.vertexY)
         Battle_state_sprite.back_image.draw(200+ self.shake_float, 170+ self.shake_float)
 
         self.hero.draw(600 + self.shake_float, 100 + self.shake_float)
@@ -53,9 +54,9 @@ class Battle_state_sprite:
         else:
             self.font.draw(535 + self.shake_float, 102 + self.shake_float, str(self.hero.get_hp()) + ' / ' + str(self.hero.get_maxhp()) + ' + ' + str(self.hero.shield), (255, 255, 150))
 
-        self.monster.draw(1400 + self.vertexX+ self.shake_float,800 + self.shake_float)
-        self.font.draw(1250 + self.vertexX+ self.shake_float, 860 + self.shake_float, self.monster.name, (255, 255, 255))
-        self.font.draw(1355 + self.vertexX+ self.shake_float, 802 + self.shake_float, str(self.monster.hp) + ' / ' + str(self.monster.max_hp), (255, 255, 255))
+        self.monster.draw(1400 + self.vertexX + self.shake_float,800 + self.shake_float)
+        self.font.draw(1250 + self.vertexX + self.shake_float, 860 + self.shake_float, self.monster.name, (255, 255, 255))
+        self.font.draw(1355 + self.vertexX + self.shake_float, 802 + self.shake_float, str(self.monster.hp) + ' / ' + str(self.monster.max_hp), (255, 255, 255))
 
         self.monstersprite.draw(self.vertexX+ self.shake_float, self.shake_float)
         Battle_state_sprite.condition_image.draw(600 + self.shake_float, 45 + self.shake_float)
@@ -96,6 +97,7 @@ class Battle_state_sprite:
             Battle_state_sprite.shake_power = Battle_state_sprite.shake_power - 1
             if Battle_state_sprite.shake_power < 0:
                 Battle_state_sprite.shake_flag = False
+                self.shake_float = 0.0
 
     def get_victory_flag(self):
         return self.victory_flag
@@ -104,3 +106,16 @@ class Battle_state_sprite:
     def set_shake(value):
         Battle_state_sprite.shake_flag = True
         Battle_state_sprite.shake_power = value
+
+    @staticmethod
+    def set_init():
+        if len(Battle_state_sprite.stage_image) == 0:
+            Battle_state_sprite.stage_image.append(load_image("../Resources/battle/battle_gameshow.png"))
+            Battle_state_sprite.stage_image.append(load_image("../Resources/battle/battle_ice.png"))
+            Battle_state_sprite.stage_image.append(load_image("../Resources/battle/finale_back.png"))
+        if Battle_state_sprite.back_image is None:
+            Battle_state_sprite.back_image = load_image("../Resources/battle/warrior_back.png")
+        if Battle_state_sprite.banner is None:
+            Battle_state_sprite.banner = banner.WinBanner()
+        if Battle_state_sprite.condition_image is None:
+            Battle_state_sprite.condition_image = load_image('../Resources/common/condition_text_bar.png')

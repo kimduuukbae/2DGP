@@ -53,6 +53,7 @@ class Slime(Inbattlemonster):
         self.image.clip_draw(self.frame % 5 * self.imageWidth,(1 - (self.frame // 5)) * self.imageHeight,
                              self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
 
+
 class BabySquid(Inbattlemonster):
     def __init__(self):
         super().__init__("새끼오징어")
@@ -78,7 +79,32 @@ class BabySquid(Inbattlemonster):
                              self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
 
 
-MONSTER_LIST = {"슬라임" : Slime, "새끼오징어" : BabySquid }
+class FinaleBoss(Inbattlemonster):
+    def __init__(self):
+        super().__init__("행운의여왕")
+        self.image = pico2d.load_image('../Resources/battle/ladyluck_mouse_animation.png')
+        self.imageWidth = self.image.w // 5
+        self.imageHeight = self.image.h
+        self.clipWidth = self.imageWidth
+        self.clipHeight = self.imageHeight
+        self.hp = 45
+        self.pivot = 10
+        self.info = "행운의 여왕은 장비를 계속 변경합니다."
+
+        self.item_list = ["poison", "inkattack", "inkattack"]
+
+    def update(self):
+        self.frameTime += game_framework.frame_time
+        if self.frameTime > 0.1:
+            self.frameTime = 0.0
+            self.frame = (self.frame + 1)%5
+
+    def draw(self, x=0, y=0):
+        self.image.clip_draw(self.frame % 5 * self.imageWidth, self.imageHeight,
+                             self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
+
+
+MONSTER_LIST = {"슬라임" : Slime, "새끼오징어" : BabySquid, "행운의여왕": FinaleBoss}
 
 
 def make_monster(monster_type):

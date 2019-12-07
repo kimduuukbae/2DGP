@@ -21,7 +21,7 @@ def collision_hero_object(hero_object, collision_object):
         if collision_object.get_type() == 1:
             collision_object.set_in_battle()
             hero_object.set_in_battle()
-            HeroStatus().set_enemy_type(collision_object.get_name())
+            HeroStatus.set_enemy_type(collision_object.get_name())
         else:
             collision_object.push_event(WaitState)
             fadescene.Fade.push_event(fadescene.FadeInStage)
@@ -57,6 +57,8 @@ def handle_events():
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_o):
+                main_state_spritelist.set_shake(5)
             if (event.type, event.button) == (SDL_MOUSEBUTTONDOWN, SDL_BUTTON_LEFT):
                 x = event.x
                 y = 1080 - 1 - event.y
@@ -89,6 +91,7 @@ def update():
     for i in banner_list:
         i.update()
     fadescene.Fade.update()
+    sprite_list.update()
 
 
 def draw():

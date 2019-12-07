@@ -165,8 +165,18 @@ class BabySquid(Monster_in_menu):
         self.imageHeight = self.image.h
         self.clipWidth = self.imageWidth // 2
         self.clipHeight = self.imageHeight
-        self.id = 8
+        self.id = 2
         self.pivotX = 0
         self.pivotY = 70
 
 
+class FinaleBoss(Monster_in_menu):
+    def __init__(self):
+        super().__init__("행운의여왕")
+        self.id = 2
+        self.pivotX = 0
+        self.pivotY = 70
+        self.type = 3
+
+    def draw(self):
+        pass

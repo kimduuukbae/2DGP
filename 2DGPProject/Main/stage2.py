@@ -34,7 +34,7 @@ def enter():
     sprite_list = main_state_spritelist()
     sprite_list.add_image('../Resources/stage/stage1Area.png')
     collision_object_list.append(BabySquid())
-    collision_object_list[0].set_position(550, 850)
+    collision_object_list[0].set_position(550, 350)
 
     map_list, bridge_list = make_map(2)
     character.set_position(300, 600)
@@ -89,6 +89,7 @@ def update():
     for i in banner_list:
         i.update()
     fadescene.Fade.update()
+    sprite_list.update()
 
 
 def draw():
@@ -123,5 +124,6 @@ def resume():
 
     if len(collision_object_list) == 0:
         collision_object_list.append(Door())
-        collision_object_list[-1].set_position(1550, 850)
+        collision_object_list[-1].set_position(1550, 350)
+        collision_object_list[-1].set_id(6)
     pass
