@@ -3,7 +3,7 @@ from monster_in_menu import *
 from banner import *
 import fadescene
 from main_state_spritelist import *
-import winsound
+from sound_manager import *
 from hero import *
 
 map_list = None
@@ -52,6 +52,13 @@ def enter():
     character.set_image_pivot(20, 50)
     character.set_image_size(260, 150)
 
+    SoundManager.add_sound("../Resources/sound/ladyluckfloor.ogg", "BackGround")
+    SoundManager.play_sound("BackGround", True)
+
+    SoundManager.pop_sound("Combat")
+    SoundManager.add_sound("../Resources/sound/combatboss.ogg", "Combat")
+
+    SoundManager.add_effect_sound("../Resources/sound/effect/ladyluck.wav", "Raugh")
 
 def exit():
     global character
@@ -129,6 +136,7 @@ def draw():
 
 
 def pause():
+    SoundManager.play_sound("Raugh", False)
     for i in range(len(collision_object_list)):
         if collision_object_list[i].get_in_battle():
             collision_object_list.pop(i)
@@ -138,8 +146,7 @@ def pause():
 def resume():
     character.add_position_x(131)
     banner_list.pop()
-    winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
-                       winsound.SND_LOOP | winsound.SND_ASYNC)
+
     sprite_list.reset()
 
     if len(collision_object_list) == 0:

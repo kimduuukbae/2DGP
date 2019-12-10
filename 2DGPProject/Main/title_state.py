@@ -4,8 +4,8 @@ import random as r
 import game_framework
 import main_state
 import battle_state_sprite
-import winsound
 import fadescene
+from sound_manager import *
 
 
 
@@ -101,8 +101,11 @@ def enter():
     oList[6].set_position(1600, 100)
     oList[6].set_image_size(400, 100)
     oList[6].set_clip_size(608, 150)
-    winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
-                       winsound.SND_LOOP | winsound.SND_ASYNC)
+
+    SoundManager.add_sound("../Resources/sound/title.ogg", "BackGround")
+    SoundManager.add_effect_sound("../Resources/sound/effect/herowinsound.wav", "win")
+    SoundManager.add_effect_sound("../Resources/sound/effect/herobattlesound.wav", "battle")
+    SoundManager.play_sound("BackGround", True)
     battle_state_sprite.Battle_state_sprite.set_init()
 
 

@@ -1,8 +1,10 @@
 from fadescene import *
 import battle_state_sprite
-import winsound
+import boss_state_sprite
+from sound_manager import *
 from button import *
 from battle_action import *
+import stage_manager
 
 sprites = None
 turnbtn = None
@@ -11,15 +13,18 @@ battle_action = None
 
 def enter():
     global sprites, turnbtn, battle_action
-    sprites = battle_state_sprite.Battle_state_sprite()
-    winsound.PlaySound('../Resources/battle/combat1Sound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
-                       winsound.SND_LOOP | winsound.SND_ASYNC)
-
+    if stage_manager.StageManager.stage_idx is not 2:
+        sprites = battle_state_sprite.Battle_state_sprite()
+    else:
+        sprites = boss_state_sprite.Boss_Battle_Sprite()
+    SoundManager.play_sound("Combat", True)
     turnbtn = Turnbutton()
     turnbtn.set_position(1700, 200)
 
-    battle_action = Action()
-
+    if main_state.stage_collection.get_stage_idx() == 2:
+        battle_action = Action(WaitTurn)
+    else:
+        battle_action = Action()
 
 def exit():
     battle_action.action_clear()

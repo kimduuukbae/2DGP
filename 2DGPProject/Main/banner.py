@@ -1,7 +1,6 @@
 from pico2d import *
 import game_framework
 import battle_state
-import main_state
 import fadescene
 
 class Banner:

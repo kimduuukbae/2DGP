@@ -9,7 +9,7 @@ class main_state_spritelist:
 
     def __init__(self):
         self.hero = HeroStatus()
-        self.font = font()
+        self.font = Font()
         self.spriteList = []
         self.spriteList.append(o.Object('../Resources/stage/uiShader.png'))
         self.spriteList.append(o.Object('../Resources/stage/character_Icon.png'))

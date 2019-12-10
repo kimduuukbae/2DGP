@@ -2,7 +2,8 @@ from object import *
 import game_framework
 import main_state
 import banner
-import winsound
+from sound_manager import *
+import pico2d
 
 
 class IdleState:
@@ -62,8 +63,7 @@ class ExitState:
         ExitState.count += 2
         if ExitState.count > 20:
             main_state.stage_collection.cur_stage.banner_list.append(banner.BattleBanner())
-            winsound.PlaySound('../Resources/stage/fightfxSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
-                               winsound.SND_ASYNC)
+            SoundManager.play_sound("battle", False)
             monster.event_que.append(WaitState)
 
     @staticmethod

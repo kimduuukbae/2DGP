@@ -41,12 +41,16 @@ def enter():
     character.set_image_pivot(20, 50)
     character.set_image_size(260, 150)
 
+    SoundManager.add_sound("../Resources/sound/ice.ogg", "BackGround")
+    SoundManager.play_sound("BackGround", True)
+
 
 def exit():
     global character
     del character
     sprite_list.clear()
     map_list.clear()
+    SoundManager.pop_sound("BackGround")
 
 
 def handle_events():
@@ -109,6 +113,7 @@ def draw():
 
 
 def pause():
+    SoundManager.stop("BackGround")
     for i in range(len(collision_object_list)):
         if collision_object_list[i].get_in_battle():
             collision_object_list.pop(i)
@@ -118,12 +123,11 @@ def pause():
 def resume():
     character.add_position_x(131)
     banner_list.pop()
-    winsound.PlaySound('../Resources/intro/introSound.wav', winsound.SND_FILENAME | winsound.SND_NOWAIT | \
-                       winsound.SND_LOOP | winsound.SND_ASYNC)
     sprite_list.reset()
 
     if len(collision_object_list) == 0:
         collision_object_list.append(Door())
         collision_object_list[-1].set_position(1550, 350)
         collision_object_list[-1].set_id(6)
-    pass
+
+    SoundManager.play_sound("BackGround", True)

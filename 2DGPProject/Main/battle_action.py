@@ -1,8 +1,8 @@
 import hero
-from monster_in_battle import *
 from item import *
 from dice import *
 from battle_state_sprite import *
+
 class EnemyTurn:
     dice = Dice_manager(0)
 
@@ -19,8 +19,11 @@ class EnemyTurn:
     ai_change_turn = False
     @staticmethod
     def enter(obj):
+        if main_state.stage_collection.get_stage_idx() == 2:
+            Monsterstatus.change_item()
+
         EnemyTurn.item.push_item_list(Monsterstatus.item_list)
-        EnemyTurn.dice.push_dice_monster(3)
+        EnemyTurn.dice.push_dice_monster(Battle_state_sprite.count_dice)
         EnemyTurn.is_ai_using = False
         Monsterstatus.m_status_conditon.active_condition(Monsterstatus)
 
@@ -30,6 +33,7 @@ class EnemyTurn:
         EnemyTurn.item.update()
         EnemyTurn.dice.update()
         if EnemyTurn.is_ai_using is False:
+
             if EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_use() or \
                 EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_try_fail():
                 EnemyTurn.ai_change_turn = True
@@ -149,13 +153,41 @@ class ExitState:
 
         pass
 
+class WaitTurn:
+    wait_time = 0.0
+
+    @staticmethod
+    def enter(obj):
+        WaitTurn.wait_time = 0.0
+        pass
+
+    @staticmethod
+    def update(obj):
+        WaitTurn.wait_time += game_framework.frame_time
+        if WaitTurn.wait_time > 5.0:
+            obj.cur_turn = HeroTurn
+            obj.cur_turn.enter(obj)
+        pass
+
+    @staticmethod
+    def draw(obj):
+        pass
+
+    @staticmethod
+    def exit(obj):
+        pass
+
+
 class Action:
-    def __init__(self):
-        self.cur_turn = HeroTurn
+    def __init__(self, turn=HeroTurn):
+        self.cur_turn = turn
         self.click_dice_idx = -1
         self.mouse_x_pos = 0
         self.mouse_y_pos = 0
         self.cur_turn.enter(self)
+
+    def get_current_action(self):
+        return self.cur_turn
 
     def update(self):
         self.cur_turn.update(self)

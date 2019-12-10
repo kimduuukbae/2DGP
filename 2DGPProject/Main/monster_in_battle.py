@@ -1,7 +1,7 @@
 from object import *
 import game_framework
 from status_condition import *
-
+import random
 class Inbattlemonster(Object):
     def __init__(self, name):
         super().__init__(None)
@@ -12,9 +12,14 @@ class Inbattlemonster(Object):
         self.imageHeight = 0
         self.x = 1700
         self.y = 800
+        self.num_dice = 0
         self.hp = 0
         self.pivot = 0
         self.item_list = None
+        self.effectsound = None
+
+    def get_numeric_dice(self):
+        return self.num_dice
 
     def get_hp(self):
         return self.hp
@@ -28,6 +33,9 @@ class Inbattlemonster(Object):
     def get_item_list(self):
         return self.item_list
 
+    def get_sound(self):
+        return self.effectsound
+
 
 class Slime(Inbattlemonster):
     def __init__(self):
@@ -39,6 +47,7 @@ class Slime(Inbattlemonster):
         self.clipHeight = self.imageHeight
         self.hp = 10
         self.pivot = 14.5
+        self.num_dice = 2
         self.info = "슬라임은 기본 공격에 약합니다."
 
         self.item_list = ["poison", "poison", "poison"]
@@ -64,6 +73,7 @@ class BabySquid(Inbattlemonster):
         self.clipHeight = self.imageHeight
         self.hp = 15
         self.pivot = 10
+        self.num_dice = 3
         self.info = "새끼오징어는 기본 공격에 약합니다."
 
         self.item_list = ["poison", "inkattack", "inkattack"]
@@ -87,21 +97,31 @@ class FinaleBoss(Inbattlemonster):
         self.imageHeight = self.image.h
         self.clipWidth = self.imageWidth
         self.clipHeight = self.imageHeight
+        self.x = 1250
+        self.y = 1160
         self.hp = 45
-        self.pivot = 10
+        self.pivot = 3
+        self.num_dice = 1
         self.info = "행운의 여왕은 장비를 계속 변경합니다."
 
-        self.item_list = ["poison", "inkattack", "inkattack"]
+        self.item_list = []
+        self.random_item = ["verdict1", "verdict2"]
 
     def update(self):
         self.frameTime += game_framework.frame_time
         if self.frameTime > 0.1:
             self.frameTime = 0.0
-            self.frame = (self.frame + 1)%5
+            self.frame = (self.frame + 1) % 5
 
     def draw(self, x=0, y=0):
-        self.image.clip_draw(self.frame % 5 * self.imageWidth, self.imageHeight,
-                             self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
+        self.image.clip_composite_draw(self.frame * self.imageWidth, 0,
+                             self.clipWidth, self.clipHeight, -0.2, 'a',  self.x + x, self.y - y, self.imageWidth,
+                             self.imageHeight)
+
+    def change_item(self):
+        self.item_list.clear()
+        self.item_list.append(self.random_item[random.randint(0, 1)])
+
 
 
 MONSTER_LIST = {"슬라임" : Slime, "새끼오징어" : BabySquid, "행운의여왕": FinaleBoss}
@@ -119,6 +139,7 @@ class Monsterstatus:
     img = None
     name = None
     item_list = None
+    save_obj = None
     m_status_conditon = StatusCondition()
 
     def __init__(self):
@@ -136,6 +157,10 @@ class Monsterstatus:
         Monsterstatus.max_hp = obj.get_hp()
         Monsterstatus.name = obj.get_name()
         Monsterstatus.pivot = obj.get_pivot()
+        if Monsterstatus.save_obj is not None:
+            del Monsterstatus.save_obj
+
+        Monsterstatus.save_obj = obj
         Monsterstatus.item_list = obj.get_item_list()
 
     @staticmethod
@@ -150,5 +175,12 @@ class Monsterstatus:
     @staticmethod
     def add_hp(value):
         Monsterstatus.hp += value
+
+    @staticmethod
+    def change_item():
+        Monsterstatus.item_list.clear()
+        Monsterstatus.save_obj.change_item()
+        Monsterstatus.item_list = Monsterstatus.save_obj.get_item_list()
+
 
 

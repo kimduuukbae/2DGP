@@ -9,7 +9,7 @@ class Item:
     volY = 30
     collisionImage = None
     def __init__(self):
-        self.namefont = font()
+        self.namefont = Font()
         self.itemName = None
         self.itemInfo = None
         self.image = None
@@ -125,6 +125,7 @@ class Item:
     def get_position(self):
         return self.x, self.y
 
+
 class BaseAttack(Item):
     def __init__(self):
         super().__init__()
@@ -192,6 +193,7 @@ class ReloadDice(Item):
         self.count = 3
         self.itemInfo = "주사위를 " + str(self.count) + "회 다시 굴린다."
 
+
 class Poison(Item):
     def __init__(self):
         super().__init__()
@@ -229,8 +231,61 @@ class InkAttack(Item):
         obj.set_use()
 
 
-ITEM_LIST = {"baseattack" : BaseAttack, "reloaddice" : ReloadDice, "ironshield" : IronShield, "poison" : Poison,
-             "inkattack" : InkAttack}
+class Verdict(Item):
+    def __init__(self):
+        super().__init__()
+        self.namefont2 = Semifont(24)
+        self.itemName = "판결"
+        self.itemInfo1 = "□ 의 데미지를 입힌다."
+        self.itemInfo2 = "짝수라면 1의 피해만 입힌다."
+        self.image = pico2d.load_image('../Resources/common/small_blue.png')
+        self.pivotItemName = -32
+        self.pivotItemInfo1 = -115
+        self.pivotItemInfo2 = -140
+        self.imagewidth = self.image.w
+        self.imageheight = self.image.h
+        self.rule = 'ANY'
+
+    def active(self, obj, status):
+        self.used = True
+        if obj.get_count() % 2 == 0:
+            status.add_hp(-status.min_shield(1))
+        else:
+            status.add_hp(-status.min_shield(obj.get_count()))
+        obj.set_use()
+
+    def draw(self):
+        self.image.draw(self.x,self.y, self.imagewidth, self.imageheight)
+        self.namefont.draw(self.x + self.pivotItemName,self.y + 120,self.itemName,(255,255,255))
+        self.namefont2.draw(self.x + self.pivotItemInfo1,self.y - 70,self.itemInfo1,(255,255,255))
+        self.namefont2.draw(self.x + self.pivotItemInfo2, self.y - 105, self.itemInfo2, (255, 255, 255))
+        Item.collisionImage.draw(self.x, self.y)
+        if self.rule is not 'ANY':
+            self.namefont.draw(self.x - 30, self.y + 40, ITEM_RULE[self.rule], (255, 255, 255))
+            self.namefont.draw(self.x - 10, self.y, str(self.rule_count), (255, 255, 255))
+
+
+class Verdict2(Verdict):
+    def __init__(self):
+        super().__init__()
+        self.itemInfo = "□ 의 데미지를 입힌다. 홀수라면 1의 피해만 입힌다."
+        self.pivotItemName = -60
+        self.pivotItemInfo = -155
+        self.imagewidth = self.image.w
+        self.imageheight = self.image.h
+        self.rule = 'ANY'
+
+    def active(self, obj, status):
+        self.used = True
+        if obj.get_count() % 2 == 1:
+            status.add_hp(-status.min_shield(1))
+        else:
+            status.add_hp(-status.min_shield(obj.get_count()))
+        obj.set_use()
+
+
+ITEM_LIST = {"baseattack": BaseAttack, "reloaddice": ReloadDice, "ironshield": IronShield, "poison": Poison,
+             "inkattack": InkAttack, "verdict1": Verdict, "verdict2": Verdict2}
 
 
 def itemfactory(name):
