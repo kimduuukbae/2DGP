@@ -2,9 +2,11 @@ from hero import *
 from font import *
 from monster_in_battle import *
 from sound_manager import *
+import fail_state
 import banner
 import main_state
 import math
+import fadescene
 
 
 class Battle_state_sprite:
@@ -82,7 +84,8 @@ class Battle_state_sprite:
             if HeroStatus.hp <= 0 or Monsterstatus.hp <= 0:
                 self.victory_flag = 1
                 SoundManager.stop("Combat")
-                SoundManager.play_sound("win", False)
+                if HeroStatus.hp > 0:
+                    SoundManager.play_sound("win", False)
 
         if self.victory_flag == 1:
             self.time_to_banner += game_framework.frame_time
@@ -90,6 +93,7 @@ class Battle_state_sprite:
             if self.time_to_banner > 2.0:
                 if HeroStatus.hp <= 0:
                     self.victory_flag = 2
+                    fadescene.Fade.change_state(fail_state)
                 elif Monsterstatus.hp <= 0:
                     self.victory_flag = 3
                 self.time_to_banner = 0.0

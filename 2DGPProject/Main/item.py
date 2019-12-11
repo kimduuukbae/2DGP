@@ -268,9 +268,12 @@ class Verdict(Item):
 class Verdict2(Verdict):
     def __init__(self):
         super().__init__()
-        self.itemInfo = "□ 의 데미지를 입힌다. 홀수라면 1의 피해만 입힌다."
-        self.pivotItemName = -60
-        self.pivotItemInfo = -155
+        Verdict.__init__(self)
+        self.itemInfo1 = "□ 의 데미지를 입힌다."
+        self.itemInfo2 = "홀수라면 1의 피해만 입힌다."
+        self.pivotItemName = -32
+        self.pivotItemInfo1 = -115
+        self.pivotItemInfo2 = -140
         self.imagewidth = self.image.w
         self.imageheight = self.image.h
         self.rule = 'ANY'

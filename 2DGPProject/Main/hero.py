@@ -177,6 +177,8 @@ class HeroStatus:
     @staticmethod
     def add_shield(value):
         HeroStatus.shield += value
+        if HeroStatus.shield > 10:
+            HeroStatus.shield = 10
 
     @staticmethod
     def min_shield(value):

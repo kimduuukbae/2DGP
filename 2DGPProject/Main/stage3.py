@@ -52,11 +52,12 @@ def enter():
     character.set_image_pivot(20, 50)
     character.set_image_size(260, 150)
 
-    SoundManager.add_sound("../Resources/sound/ladyluckfloor.ogg", "BackGround")
-    SoundManager.play_sound("BackGround", True)
-
     SoundManager.pop_sound("Combat")
     SoundManager.add_sound("../Resources/sound/combatboss.ogg", "Combat")
+
+    SoundManager.change_sound("../Resources/sound/ladyluckfloor.ogg", "BackGround")
+    #SoundManager.add_sound("../Resources/sound/ladyluckfloor.ogg", "BackGround")
+    SoundManager.play_sound("BackGround", True)
 
     SoundManager.add_effect_sound("../Resources/sound/effect/ladyluck.wav", "Raugh")
 

@@ -2,7 +2,7 @@ import hero
 from item import *
 from dice import *
 from battle_state_sprite import *
-
+from sound_manager import *
 class EnemyTurn:
     dice = Dice_manager(0)
 
@@ -71,6 +71,7 @@ class EnemyTurn:
                             EnemyTurn.is_ai_using = False
                             EnemyTurn.ai_time = 0.0
                             Battle_state_sprite.set_shake(5)
+                            SoundManager.play_sound("Attack", False)
                             break
 
     @staticmethod
@@ -108,6 +109,7 @@ class HeroTurn:
                 if HeroTurn.dice.collide_to_object(i, Monsterstatus):
                     obj.click_dice_idx = -1
                     Battle_state_sprite.set_shake(5)
+
 
 
 

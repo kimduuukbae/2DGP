@@ -21,6 +21,10 @@ class SoundManager:
     def add_effect_sound(music_direction, music_name):
         if music_name not in SoundManager.sound_dict:
             SoundManager.sound_dict[music_name] = pico2d.load_wav(music_direction)
+        else:
+            obj = SoundManager.sound_dict.pop(music_name)
+            del obj
+            SoundManager.sound_dict[music_name] = pico2d.load_wav(music_direction)
 
     @staticmethod
     def play_sound(music_name, repeat):
@@ -39,10 +43,12 @@ class SoundManager:
 
     @staticmethod
     def stop(music_name):
-        SoundManager.sound_dict[music_name].stop()
+        if music_name in SoundManager.sound_dict:
+            SoundManager.sound_dict[music_name].stop()
 
     @staticmethod
     def pop_sound(music_name):
-        ob = SoundManager.sound_dict.pop(music_name)
-        ob.stop()
-        del ob
+        if music_name in SoundManager.sound_dict:
+            ob = SoundManager.sound_dict.pop(music_name)
+            ob.stop()
+            del ob

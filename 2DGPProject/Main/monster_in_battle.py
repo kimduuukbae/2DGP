@@ -2,6 +2,7 @@ from object import *
 import game_framework
 from status_condition import *
 import random
+from sound_manager import *
 class Inbattlemonster(Object):
     def __init__(self, name):
         super().__init__(None)
@@ -36,6 +37,11 @@ class Inbattlemonster(Object):
     def get_sound(self):
         return self.effectsound
 
+    @staticmethod
+    def play_sound():
+        SoundManager.play_sound("Defense", False)
+
+
 
 class Slime(Inbattlemonster):
     def __init__(self):
@@ -49,6 +55,9 @@ class Slime(Inbattlemonster):
         self.pivot = 14.5
         self.num_dice = 2
         self.info = "슬라임은 기본 공격에 약합니다."
+
+        SoundManager.add_effect_sound("../Resources/sound/effect/slime_attack.wav", "Attack")
+        SoundManager.add_effect_sound("../Resources/sound/effect/slime_defense.wav", "Defense")
 
         self.item_list = ["poison", "poison", "poison"]
 
@@ -78,6 +87,9 @@ class BabySquid(Inbattlemonster):
 
         self.item_list = ["poison", "inkattack", "inkattack"]
 
+        SoundManager.add_effect_sound("../Resources/sound/effect/baby_attack.wav", "Attack")
+        SoundManager.add_effect_sound("../Resources/sound/effect/baby_defense.wav", "Defense")
+
     def update(self):
         self.frameTime += game_framework.frame_time
         if self.frameTime > 0.1:
@@ -100,12 +112,15 @@ class FinaleBoss(Inbattlemonster):
         self.x = 1250
         self.y = 1160
         self.hp = 45
-        self.pivot = 3
+        self.pivot = 3.3
         self.num_dice = 1
         self.info = "행운의 여왕은 장비를 계속 변경합니다."
-
+        self.page = 1
         self.item_list = []
         self.random_item = ["verdict1", "verdict2"]
+
+        SoundManager.add_effect_sound('../Resources/sound/effect/ladyluckattack.wav', "Attack")
+        SoundManager.add_effect_sound("../Resources/sound/effect/ladyluckdefence.wav", "Defense")
 
     def update(self):
         self.frameTime += game_framework.frame_time
@@ -119,8 +134,20 @@ class FinaleBoss(Inbattlemonster):
                              self.imageHeight)
 
     def change_item(self):
-        self.item_list.clear()
-        self.item_list.append(self.random_item[random.randint(0, 1)])
+        if self.page == 1:
+            self.item_list.clear()
+            self.item_list.append(self.random_item[random.randint(0, 1)])
+        else:
+            self.item_list.clear()
+            for i in self.random_item:
+                self.item_list.append(i)
+
+    def change_page(self):
+        self.page = 2
+        self.num_dice = 2
+
+    def get_page(self):
+        return self.page
 
 
 
@@ -175,6 +202,8 @@ class Monsterstatus:
     @staticmethod
     def add_hp(value):
         Monsterstatus.hp += value
+        if value < 0:
+            Inbattlemonster.play_sound()
 
     @staticmethod
     def change_item():

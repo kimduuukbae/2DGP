@@ -6,6 +6,8 @@ import main_state
 import battle_state_sprite
 import fadescene
 from sound_manager import *
+import fail_state
+import end_state
 
 
 
@@ -102,10 +104,11 @@ def enter():
     oList[6].set_image_size(400, 100)
     oList[6].set_clip_size(608, 150)
 
-    SoundManager.add_sound("../Resources/sound/title.ogg", "BackGround")
+    SoundManager.change_sound("../Resources/sound/title.ogg", "BackGround")
     SoundManager.add_effect_sound("../Resources/sound/effect/herowinsound.wav", "win")
     SoundManager.add_effect_sound("../Resources/sound/effect/herobattlesound.wav", "battle")
     SoundManager.play_sound("BackGround", True)
+
     battle_state_sprite.Battle_state_sprite.set_init()
 
 
@@ -125,6 +128,10 @@ def handle_events():
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_o):
+                fadescene.Fade.change_state(end_state)
+            if (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
+                fadescene.Fade.change_state(fail_state)
             if event.type == SDL_MOUSEMOTION:
                 x = event.x
                 y = 1080 - 1 - event.y
