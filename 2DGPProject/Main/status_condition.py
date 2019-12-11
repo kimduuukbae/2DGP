@@ -1,7 +1,6 @@
 # 상태이상에 대한 내용을 작성합니다.
 
 
-
 class ConditionPoison:  # 독 상태이상
 
     def __init__(self, count):
@@ -25,8 +24,31 @@ class ConditionPoison:  # 독 상태이상
         return ConditionPoison
 
 
-STATUS_CONDITION = {ConditionPoison: "독"}
-STATUS_CONDITION_NAME = {"독": ConditionPoison}
+class ConditionFrozen:  # 빙결 상태이상
+
+    def __init__(self, count):
+        self.count = count
+
+    def add_count(self, value):
+        self.count += value
+
+    def min_count(self, value):
+        self.count -= value
+
+    def active(self, obj):
+        obj.max_dice -= 1
+        self.min_count(1)
+
+    def get_count(self):
+        return self.count
+
+    @staticmethod
+    def get_type():
+        return ConditionFrozen
+
+
+STATUS_CONDITION = {ConditionPoison: "독", ConditionFrozen: "빙결"}
+STATUS_CONDITION_NAME = {"독": ConditionPoison, "빙결": ConditionFrozen}
 
 
 class StatusCondition:

@@ -56,7 +56,6 @@ def enter():
     SoundManager.add_sound("../Resources/sound/combatboss.ogg", "Combat")
 
     SoundManager.change_sound("../Resources/sound/ladyluckfloor.ogg", "BackGround")
-    #SoundManager.add_sound("../Resources/sound/ladyluckfloor.ogg", "BackGround")
     SoundManager.play_sound("BackGround", True)
 
     SoundManager.add_effect_sound("../Resources/sound/effect/ladyluck.wav", "Raugh")
@@ -64,6 +63,8 @@ def enter():
 def exit():
     global character
     del character
+    collision_object_list.clear()
+    banner_list.clear()
     sprite_list.clear()
     map_list.clear()
 

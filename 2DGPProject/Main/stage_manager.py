@@ -16,6 +16,11 @@ class StageManager:
 
 
     @staticmethod
+    def set_index(value):
+        StageManager.stage_idx = value
+        StageManager.cur_stage = StageManager.stage_list[value]
+
+    @staticmethod
     def get_stage_idx():
         return StageManager.stage_idx
 

@@ -3,6 +3,8 @@ from item import *
 from dice import *
 from battle_state_sprite import *
 from sound_manager import *
+
+
 class EnemyTurn:
     dice = Dice_manager(0)
 
@@ -15,64 +17,65 @@ class EnemyTurn:
     ai_dice_idx = -1
 
     ai_time = 0.0
-
+    ai_wait_time = 0.0
     ai_change_turn = False
+
     @staticmethod
     def enter(obj):
         if main_state.stage_collection.get_stage_idx() == 2:
             Monsterstatus.change_item()
-
+        Monsterstatus.m_status_conditon.active_condition(Monsterstatus)
         EnemyTurn.item.push_item_list(Monsterstatus.item_list)
         EnemyTurn.dice.push_dice_monster(Battle_state_sprite.count_dice)
         EnemyTurn.is_ai_using = False
-        Monsterstatus.m_status_conditon.active_condition(Monsterstatus)
+        EnemyTurn.ai_wait_time = 0.0
 
 
     @staticmethod
     def update(obj):
         EnemyTurn.item.update()
         EnemyTurn.dice.update()
-        if EnemyTurn.is_ai_using is False:
+        EnemyTurn.ai_wait_time += game_framework.frame_time
+        if EnemyTurn.ai_wait_time > 1.0:
+            if EnemyTurn.is_ai_using is False:
+                if EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_use() or \
+                    EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_try_fail():
+                    EnemyTurn.ai_change_turn = True
+                    EnemyTurn.is_ai_using = True
 
-            if EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_use() or \
-                EnemyTurn.dice.dicelist[len(EnemyTurn.dice.dicelist)-1].get_try_fail():
-                EnemyTurn.ai_change_turn = True
-                EnemyTurn.is_ai_using = True
+                for i in EnemyTurn.dice.dicelist:
+                    if i.get_use() or i.get_try_fail():
+                        continue
 
-            for i in EnemyTurn.dice.dicelist:
-                if i.get_use() or i.get_try_fail():
-                    continue
-
-                for j in EnemyTurn.item.getlist():
-                    if j.check_condition(i):
-                        EnemyTurn.is_ai_using = True
-                        to_x, to_y = j.get_position()
-                        origin_x, origin_y = i.get_position()
-                        EnemyTurn.ai_to_distance_x = (to_x - origin_x) / 100
-                        EnemyTurn.ai_to_distance_y = (to_y - origin_y) / 100
-                        EnemyTurn.ai_dice_idx = i.get_index()
-                        break
-                if EnemyTurn.is_ai_using:
-                    break
-                i.set_try_fail()
-
-        if EnemyTurn.is_ai_using:
-            EnemyTurn.ai_time += game_framework.frame_time
-            if EnemyTurn.ai_time > 1.0:
-                if EnemyTurn.ai_change_turn:
-                    obj.change_turn()
-                else:
-                    EnemyTurn.dice.get_dice_to_idx(EnemyTurn.ai_dice_idx).add_position(
-                        EnemyTurn.ai_to_distance_x, EnemyTurn.ai_to_distance_y)
-
-                    for i in range(len(EnemyTurn.item.itemlist)):
-                        if EnemyTurn.dice.collide_to_object(EnemyTurn.item.itemlist[i], HeroStatus):
-                            EnemyTurn.item.itemlist.pop(i)
-                            EnemyTurn.is_ai_using = False
-                            EnemyTurn.ai_time = 0.0
-                            Battle_state_sprite.set_shake(5)
-                            SoundManager.play_sound("Attack", False)
+                    for j in EnemyTurn.item.getlist():
+                        if j.check_condition(i):
+                            EnemyTurn.is_ai_using = True
+                            to_x, to_y = j.get_position()
+                            origin_x, origin_y = i.get_position()
+                            EnemyTurn.ai_to_distance_x = (to_x - origin_x) / 100
+                            EnemyTurn.ai_to_distance_y = (to_y - origin_y) / 100
+                            EnemyTurn.ai_dice_idx = i.get_index()
                             break
+                    if EnemyTurn.is_ai_using:
+                        break
+                    i.set_try_fail()
+            else:
+                EnemyTurn.ai_time += game_framework.frame_time
+                if EnemyTurn.ai_time > 0.5:
+                    if EnemyTurn.ai_change_turn:
+                        obj.change_turn()
+                    else:
+                        EnemyTurn.dice.get_dice_to_idx(EnemyTurn.ai_dice_idx).add_position(
+                            EnemyTurn.ai_to_distance_x, EnemyTurn.ai_to_distance_y)
+
+                        for i in range(len(EnemyTurn.item.itemlist)):
+                            if EnemyTurn.dice.collide_to_object(EnemyTurn.item.itemlist[i], HeroStatus):
+                                EnemyTurn.item.itemlist.pop(i)
+                                EnemyTurn.is_ai_using = False
+                                EnemyTurn.ai_time = 0.0
+                                Battle_state_sprite.set_shake(5)
+                                SoundManager.play_sound("Attack", False)
+                                break
 
     @staticmethod
     def draw(obj):
@@ -94,9 +97,11 @@ class HeroTurn:
 
     @staticmethod
     def enter(obj):
+        hero.HeroStatus.max_dice = 3
         HeroTurn.item.push_item_list(hero.HeroStatus.equip_item)
-        HeroTurn.dice.push_dice(3)
         HeroStatus.status_condition.active_condition(HeroStatus)
+        HeroTurn.dice.push_dice(hero.HeroStatus.max_dice)
+
         pass
 
     @staticmethod
@@ -109,6 +114,7 @@ class HeroTurn:
                 if HeroTurn.dice.collide_to_object(i, Monsterstatus):
                     obj.click_dice_idx = -1
                     Battle_state_sprite.set_shake(5)
+
 
 
 

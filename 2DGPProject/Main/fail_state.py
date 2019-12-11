@@ -4,7 +4,9 @@ import game_framework
 import title_state
 import fadescene
 from sound_manager import *
+import stage_manager
 
+import hero
 image = None
 dt = 0.0
 
@@ -14,7 +16,8 @@ def enter():
     image = load_image("../Resources/common/fail.png")
     SoundManager.stop("BackGround")
     SoundManager.stop("Combat")
-
+    stage_manager.StageManager.set_index(0)
+    hero.HeroStatus.hp = 24
 
 def exit():
     global image

@@ -2,7 +2,9 @@ from font import *
 import game_framework
 from hero import *
 from status_condition import *
-ITEM_RULE = {'MAX': '최대', "BELOW": "이하", "ANY": "아무나", "COUNT": "합"}
+
+ITEM_RULE = {'MAX': '최대', 'BELOW': '이하', 'ANY': '아무나', 'COUNT': '합',
+             'EVE': '짝수', 'ODD': '홀수'}
 
 class Item:
     volX = 30
@@ -37,14 +39,18 @@ class Item:
     def get_use(self):
         return self.used
 
+    def get_name(self):
+        return self.itemName
+
     def draw(self):
-        self.image.draw(self.x,self.y, self.imagewidth, self.imageheight)
+        self.image.draw(self.x, self.y, self.imagewidth, self.imageheight)
         self.namefont.draw(self.x + self.pivotItemName,self.y + 120,self.itemName,(255,255,255))
         self.namefont.draw(self.x + self.pivotItemInfo,self.y - 100,self.itemInfo,(255,255,255))
         Item.collisionImage.draw(self.x, self.y)
         if self.rule is not 'ANY':
             self.namefont.draw(self.x - 30, self.y + 40, ITEM_RULE[self.rule], (255, 255, 255))
-            self.namefont.draw(self.x - 10, self.y, str(self.rule_count), (255, 255, 255))
+            if self.rule_count != 0:
+                self.namefont.draw(self.x - 10, self.y, str(self.rule_count), (255, 255, 255))
 
     def get_box(self):
         return self.x - Item.collisionImage.w // 2, self.y - Item.collisionImage.h // 2, \
@@ -211,6 +217,7 @@ class Poison(Item):
         status.get_condition().add_condition("독", 2)
         obj.set_use()
 
+
 class InkAttack(Item):
     def __init__(self):
         super().__init__()
@@ -229,6 +236,55 @@ class InkAttack(Item):
         status.add_hp(-status.min_shield(1))
         status.get_condition().add_condition("독", 1)
         obj.set_use()
+
+
+class FireBall(Item):
+    def __init__(self):
+        super().__init__()
+        self.itemName = "파이어볼"
+        self.itemInfo = "□ 의 데미지를 입힌다."
+        self.image = pico2d.load_image('../Resources/common/small_red.png')
+        self.pivotItemName = -60
+        self.pivotItemInfo = -155
+        self.imagewidth = self.image.w
+        self.imageheight = self.image.h
+        self.rule = 'EVE'
+        self.rule_count = 0
+
+    def active(self, obj, status):
+        self.used = True
+        status.add_hp(-status.min_shield(obj.get_count()))
+        obj.set_use()
+
+    def check_condition(self, object_dice):
+        if object_dice.get_count() % 2 == 0:
+            return True
+        return False
+
+
+class SnowBall(Item):
+    def __init__(self):
+        super().__init__()
+        self.itemName = "스노우볼"
+        self.itemInfo = "□ 의 피해를 입히고 주사위 1개 빙결"
+        self.image = pico2d.load_image('../Resources/common/small_blue.png')
+        self.pivotItemName = -60
+        self.pivotItemInfo = -190
+        self.imagewidth = self.image.w
+        self.imageheight = self.image.h
+        self.rule = 'ODD'
+        self.rule_count = 0
+
+    def active(self, obj, status):
+        self.used = True
+        status.add_hp(-status.min_shield(1))
+        status.get_condition().add_condition("빙결", 1)
+        obj.set_use()
+
+    def check_condition(self, object_dice):
+        if object_dice.get_count() % 2 == 1:
+            return True
+        return False
 
 
 class Verdict(Item):
@@ -287,8 +343,33 @@ class Verdict2(Verdict):
         obj.set_use()
 
 
+class Verdict3(Verdict):
+    def __init__(self):
+        super().__init__()
+        Verdict.__init__(self)
+        self.itemInfo1 = "□ 의 데미지를 입힌다."
+        self.itemInfo2 = "3이하 라면 2배의 피해를 입힌다."
+        del self.image
+        self.image = pico2d.load_image('../Resources/common/small_grey.png')
+        self.pivotItemName = -32
+        self.pivotItemInfo1 = -115
+        self.pivotItemInfo2 = -140
+        self.imagewidth = self.image.w
+        self.imageheight = self.image.h
+        self.rule = 'ANY'
+
+    def active(self, obj, status):
+        self.used = True
+        if obj.get_count() > 4:
+            status.add_hp(-status.min_shield(obj.get_count()))
+        else:
+            status.add_hp(-status.min_shield(obj.get_count() * 2))
+        obj.set_use()
+
+
 ITEM_LIST = {"baseattack": BaseAttack, "reloaddice": ReloadDice, "ironshield": IronShield, "poison": Poison,
-             "inkattack": InkAttack, "verdict1": Verdict, "verdict2": Verdict2}
+             "inkattack": InkAttack, "verdict1": Verdict, "verdict2": Verdict2, "verdict3": Verdict3,
+             "snowball": SnowBall, "fireball": FireBall}
 
 
 def itemfactory(name):

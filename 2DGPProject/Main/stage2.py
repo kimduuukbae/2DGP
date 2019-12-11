@@ -22,9 +22,17 @@ def collision_hero_object(hero_object, collision_object):
             collision_object.set_in_battle()
             hero_object.set_in_battle()
             HeroStatus().set_enemy_type(collision_object.get_name())
-        else:
+        elif collision_object.get_type() == 2:
             collision_object.push_event(WaitState)
             fadescene.Fade.push_event(fadescene.FadeInStage)
+        else:
+            collision_object.push_event(WaitState)
+            collision_object.add_position(1000,1000)
+            HeroStatus.add_hp(5)
+            collision_object_list.append(Door())
+            collision_object_list[-1].set_position(1550, 350)
+            collision_object_list[-1].set_id(6)
+
 
 
 def enter():
@@ -34,7 +42,9 @@ def enter():
     sprite_list = main_state_spritelist()
     sprite_list.add_image('../Resources/stage/stage1Area.png')
     collision_object_list.append(BabySquid())
+    collision_object_list.append(Apple())
     collision_object_list[0].set_position(550, 350)
+    collision_object_list[1].set_position(1300, 600)
 
     map_list, bridge_list = make_map(2)
     character.set_position(300, 600)
@@ -49,6 +59,8 @@ def exit():
     global character
     del character
     sprite_list.clear()
+    collision_object_list.clear()
+    banner_list.clear()
     map_list.clear()
     SoundManager.pop_sound("BackGround")
 
@@ -117,6 +129,7 @@ def pause():
     for i in range(len(collision_object_list)):
         if collision_object_list[i].get_in_battle():
             collision_object_list.pop(i)
+            break
     pass
 
 
@@ -124,10 +137,5 @@ def resume():
     character.add_position_x(131)
     banner_list.pop()
     sprite_list.reset()
-
-    if len(collision_object_list) == 0:
-        collision_object_list.append(Door())
-        collision_object_list[-1].set_position(1550, 350)
-        collision_object_list[-1].set_id(6)
 
     SoundManager.play_sound("BackGround", True)

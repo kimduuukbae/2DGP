@@ -28,6 +28,7 @@ def enter():
 
 def exit():
     battle_action.action_clear()
+    HeroStatus.shield = 0
 
 
 def handle_events():
@@ -40,7 +41,7 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             if event.key == SDLK_o:
-                sprites.set_shake(5)
+                hero.HeroStatus.hp += 5
 
         if event.type == SDL_MOUSEMOTION:
             x = event.x

@@ -35,6 +35,8 @@ def enter():
     sprite_list.add_image('../Resources/stage/stageArea.png')
     collision_object_list.append(Slime())
     collision_object_list[0].set_position(550, 850)
+    collision_object_list.append(MashMallow())
+    collision_object_list[1].set_position(1300, 600)
 
     map_list, bridge_list = make_map(1)
     character.set_position(300, 600)
@@ -52,6 +54,8 @@ def exit():
     global character
     del character
     sprite_list.clear()
+    collision_object_list.clear()
+    banner_list.clear()
     map_list.clear()
     SoundManager.pop_sound("BackGround")
 
@@ -121,6 +125,8 @@ def pause():
     for i in range(len(collision_object_list)):
         if collision_object_list[i].get_in_battle():
             collision_object_list.pop(i)
+            break
+
     SoundManager.stop("BackGround")
     pass
 

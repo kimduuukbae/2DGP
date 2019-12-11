@@ -1,6 +1,6 @@
 from object import *
-import pico2d
 from status_condition import *
+from sound_manager import *
 
 class IdleState:
 
@@ -131,6 +131,7 @@ class HeroStatus:
     img = None
     enemy_type = None
     equip_item = []
+    max_dice = 3
     status_condition = StatusCondition()
 
     def __init__(self):
@@ -173,6 +174,8 @@ class HeroStatus:
     @staticmethod
     def add_hp(value):
         HeroStatus.hp += value
+        if HeroStatus.hp > HeroStatus.maxhp:
+            HeroStatus.hp = HeroStatus.maxhp
 
     @staticmethod
     def add_shield(value):
@@ -182,6 +185,12 @@ class HeroStatus:
 
     @staticmethod
     def min_shield(value):
+        if value > 3:
+            SoundManager.play_sound("thdamage", False)
+
+        elif value > 1 and value < 4:
+            SoundManager.play_sound("tbdamage", False)
+
         HeroStatus.shield -= value
         if HeroStatus.shield < 0:
             count = HeroStatus.shield

@@ -2,9 +2,9 @@ from pico2d import *
 import game_framework
 import title_state
 import fadescene
-
+import hero
 from sound_manager import *
-
+import stage_manager
 image1 = None
 image2 = None
 draw_image = None
@@ -22,7 +22,8 @@ def enter():
     SoundManager.stop("Combat")
     SoundManager.change_sound("../Resources/sound/endgame.ogg", "BackGround")
     SoundManager.play_sound("BackGround", True)
-
+    stage_manager.StageManager.set_index(0)
+    hero.HeroStatus.hp = 24
 
 
 def exit():

@@ -57,7 +57,7 @@ class ExitState:
     def do(monster):
         monster.frameTime += game_framework.frame_time
         if monster.frameTime > 1.0:
-            monster.frame = (monster.frame + 1) % 2
+            monster.frame = (monster.frame + 1) % monster.max_frame
             monster.frameTime = 0.0
         monster.x -= 3
         ExitState.count += 2
@@ -94,6 +94,7 @@ class Monster_in_menu(Object):
         self.type = 1
         self.cur_state = IdleState
         self.event_que = []
+        self.max_frame = 2
 
     def draw(self):
         self.image.clip_draw(self.clipWidth*self.frame, 0, self.clipWidth, self.clipHeight,
@@ -128,6 +129,11 @@ class Monster_in_menu(Object):
 
     def set_id(self, value):
         self.id = value
+
+
+    def add_position(self, x, y):
+        self.x += x
+        self.y += y
 
 
 class Slime(Monster_in_menu):
@@ -170,6 +176,19 @@ class BabySquid(Monster_in_menu):
         self.pivotY = 70
 
 
+class MashMallow(Monster_in_menu):
+    def __init__(self):
+        super().__init__("마시멜로우")
+        self.image = pico2d.load_image("../Resources/stage/mashmallowStage.png")
+        self.imageWidth = self.image.w
+        self.imageHeight = self.image.h
+        self.clipWidth = self.imageWidth // 2
+        self.clipHeight = self.imageHeight
+        self.id = 5
+        self.pivotX = 0
+        self.pivotY = 30
+
+
 class FinaleBoss(Monster_in_menu):
     def __init__(self):
         super().__init__("행운의여왕")
@@ -180,3 +199,17 @@ class FinaleBoss(Monster_in_menu):
 
     def draw(self):
         pass
+
+
+class Apple(Monster_in_menu):
+    def __init__(self):
+        super().__init__("Apple")
+        self.image = pico2d.load_image("../Resources/stage/apple.png")
+        self.id = 5
+        self.pivotX = 0
+        self.pivotY = 30
+        self.type = 4
+        self.max_frame = 1
+
+    def draw(self):
+        self.image.draw(self.x, self.y + self.pivotY)

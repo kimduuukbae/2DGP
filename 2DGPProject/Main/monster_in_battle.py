@@ -101,6 +101,36 @@ class BabySquid(Inbattlemonster):
                              self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
 
 
+class MashMellow(Inbattlemonster):
+    def __init__(self):
+        super().__init__("마시멜로우")
+        self.image = pico2d.load_image('../Resources/battle/mashmallowAtlas.png')
+        self.imageWidth = self.image.w // 6
+        self.imageHeight = self.image.h
+        self.clipWidth = self.imageWidth
+        self.clipHeight = self.imageHeight
+        self.hp = 13
+        self.pivot = 11
+        self.num_dice = 2
+        self.info = "새끼오징어는 기본 공격에 약합니다."
+
+        self.item_list = ["snowball", "fireball"]
+
+        SoundManager.add_effect_sound("../Resources/sound/effect/marshmallow_attack.wav", "Attack")
+        SoundManager.add_effect_sound("../Resources/sound/effect/marshmallow_defense.wav", "Defense")
+
+    def update(self):
+        self.frameTime += game_framework.frame_time
+        if self.frameTime > 0.1:
+            self.frameTime = 0.0
+            self.frame = (self.frame + 1) % 6
+
+    def draw(self, x=0, y=0):
+        self.image.clip_draw((self.frame % 6) * self.imageWidth, 0,
+                             self.clipWidth, self.clipHeight, self.x + x, self.y + y, self.imageWidth, self.imageHeight)
+
+
+
 class FinaleBoss(Inbattlemonster):
     def __init__(self):
         super().__init__("행운의여왕")
@@ -117,7 +147,7 @@ class FinaleBoss(Inbattlemonster):
         self.info = "행운의 여왕은 장비를 계속 변경합니다."
         self.page = 1
         self.item_list = []
-        self.random_item = ["verdict1", "verdict2"]
+        self.random_item = ["verdict1", "verdict2", "verdict3"]
 
         SoundManager.add_effect_sound('../Resources/sound/effect/ladyluckattack.wav', "Attack")
         SoundManager.add_effect_sound("../Resources/sound/effect/ladyluckdefence.wav", "Defense")
@@ -136,7 +166,7 @@ class FinaleBoss(Inbattlemonster):
     def change_item(self):
         if self.page == 1:
             self.item_list.clear()
-            self.item_list.append(self.random_item[random.randint(0, 1)])
+            self.item_list.append(self.random_item[random.randint(0, 2)])
         else:
             self.item_list.clear()
             for i in self.random_item:
@@ -144,14 +174,14 @@ class FinaleBoss(Inbattlemonster):
 
     def change_page(self):
         self.page = 2
-        self.num_dice = 2
+        self.num_dice = 3
 
     def get_page(self):
         return self.page
 
 
 
-MONSTER_LIST = {"슬라임" : Slime, "새끼오징어" : BabySquid, "행운의여왕": FinaleBoss}
+MONSTER_LIST = {"슬라임" : Slime, "새끼오징어" : BabySquid, "행운의여왕": FinaleBoss, "마시멜로우": MashMellow}
 
 
 def make_monster(monster_type):
