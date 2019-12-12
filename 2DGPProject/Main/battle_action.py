@@ -73,8 +73,16 @@ class EnemyTurn:
                                 EnemyTurn.item.itemlist.pop(i)
                                 EnemyTurn.is_ai_using = False
                                 EnemyTurn.ai_time = 0.0
-                                Battle_state_sprite.set_shake(5)
-                                SoundManager.play_sound("Attack", False)
+                                Battle_state_sprite.set_shake(7)
+                                if main_state.stage_collection.get_stage_idx() == 2:
+                                    count = EnemyTurn.dice.get_dice_to_idx(EnemyTurn.ai_dice_idx).get_count()
+                                    if count < 4:
+                                        SoundManager.play_sound("Attack", False)
+                                    else:
+                                        SoundManager.play_sound("AttackH", False)
+                                    pass
+                                else:
+                                    SoundManager.play_sound("Attack", False)
                                 break
 
     @staticmethod

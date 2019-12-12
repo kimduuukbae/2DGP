@@ -61,12 +61,15 @@ def enter():
     SoundManager.add_effect_sound("../Resources/sound/effect/ladyluck.wav", "Raugh")
 
 def exit():
-    global character
+
+    global character, finale_flag, finale_time
     del character
     collision_object_list.clear()
     banner_list.clear()
     sprite_list.clear()
     map_list.clear()
+    finale_flag = False
+    finale_time = 0.0
 
 
 def handle_events():
@@ -142,7 +145,9 @@ def pause():
     for i in range(len(collision_object_list)):
         if collision_object_list[i].get_in_battle():
             collision_object_list.pop(i)
-    pass
+    banner_list.pop()
+
+
 
 
 def resume():

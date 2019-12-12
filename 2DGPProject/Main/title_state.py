@@ -109,6 +109,7 @@ def enter():
     SoundManager.play_sound("BackGround", True)
 
     SoundManager.add_effect_sound("../Resources/sound/effect/takebigdamage.wav", "tbdamage")
+    SoundManager.add_effect_sound("../Resources/sound/effect/hugedamage.wav", "hdamage")
     SoundManager.add_effect_sound("../Resources/sound/effect/takehugedamage.wav", "thdamage")
     battle_state_sprite.Battle_state_sprite.set_init()
 

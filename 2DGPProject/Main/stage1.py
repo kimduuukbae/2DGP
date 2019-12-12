@@ -43,11 +43,9 @@ def enter():
     character.set_image_pivot(20, 50)
     character.set_image_size(260, 150)
 
+    SoundManager.change_sound("../Resources/sound/combat1.ogg", "Combat")
     SoundManager.change_sound("../Resources/sound/gameshow.ogg", "BackGround")
     SoundManager.play_sound("BackGround", True)
-
-    SoundManager.add_sound("../Resources/sound/combat1.ogg", "Combat")
-
 
 
 def exit():

@@ -1,6 +1,7 @@
 from object import *
 from status_condition import *
 from sound_manager import *
+import battle_state_sprite
 
 class IdleState:
 
@@ -190,6 +191,8 @@ class HeroStatus:
 
         elif value > 1 and value < 4:
             SoundManager.play_sound("tbdamage", False)
+
+        battle_state_sprite.Battle_state_sprite.set_shake(10)
 
         HeroStatus.shield -= value
         if HeroStatus.shield < 0:

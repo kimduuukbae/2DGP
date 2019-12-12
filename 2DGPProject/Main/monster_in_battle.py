@@ -3,6 +3,8 @@ import game_framework
 from status_condition import *
 import random
 from sound_manager import *
+
+
 class Inbattlemonster(Object):
     def __init__(self, name):
         super().__init__(None)
@@ -37,8 +39,9 @@ class Inbattlemonster(Object):
     def get_sound(self):
         return self.effectsound
 
-    @staticmethod
-    def play_sound():
+    def play_sound(self, value):
+        if -value > 4:
+            SoundManager.play_sound("hdamage", False)
         SoundManager.play_sound("Defense", False)
 
 
@@ -151,6 +154,8 @@ class FinaleBoss(Inbattlemonster):
 
         SoundManager.add_effect_sound('../Resources/sound/effect/ladyluckattack.wav', "Attack")
         SoundManager.add_effect_sound("../Resources/sound/effect/ladyluckdefence.wav", "Defense")
+        SoundManager.add_effect_sound('../Resources/sound/effect/ladyluckattack_h.wav', "AttackH")
+        SoundManager.add_effect_sound("../Resources/sound/effect/ladyluckdefence_h.wav", "DefenseH")
 
     def update(self):
         self.frameTime += game_framework.frame_time
@@ -178,6 +183,13 @@ class FinaleBoss(Inbattlemonster):
 
     def get_page(self):
         return self.page
+
+    def play_sound(self, value):
+        if -value < 4:
+            SoundManager.play_sound("Defense", False)
+        else:
+            SoundManager.play_sound("DefenseH", False)
+            SoundManager.play_sound("hdamage", False)
 
 
 
@@ -233,7 +245,9 @@ class Monsterstatus:
     def add_hp(value):
         Monsterstatus.hp += value
         if value < 0:
-            Inbattlemonster.play_sound()
+            Monsterstatus.save_obj.play_sound(value)
+        if -value < 4:
+            SoundManager.play_sound("hdamage", False)
 
     @staticmethod
     def change_item():

@@ -348,7 +348,7 @@ class Verdict3(Verdict):
         super().__init__()
         Verdict.__init__(self)
         self.itemInfo1 = "□ 의 데미지를 입힌다."
-        self.itemInfo2 = "3이하 라면 2배의 피해를 입힌다."
+        self.itemInfo2 = "2이하 라면 2배의 피해를 입힌다."
         del self.image
         self.image = pico2d.load_image('../Resources/common/small_grey.png')
         self.pivotItemName = -32
@@ -360,7 +360,7 @@ class Verdict3(Verdict):
 
     def active(self, obj, status):
         self.used = True
-        if obj.get_count() > 4:
+        if obj.get_count() > 2:
             status.add_hp(-status.min_shield(obj.get_count()))
         else:
             status.add_hp(-status.min_shield(obj.get_count() * 2))
@@ -372,8 +372,9 @@ ITEM_LIST = {"baseattack": BaseAttack, "reloaddice": ReloadDice, "ironshield": I
              "snowball": SnowBall, "fireball": FireBall}
 
 
-def itemfactory(name):
+def item_factory(name):
     return ITEM_LIST[name]()
+
 
 class item_manager:
     def __init__(self, type):
@@ -392,7 +393,7 @@ class item_manager:
             self.stopX = 1440
 
     def push_item(self, itemname):
-        self.itemlist.append(itemfactory(itemname))
+        self.itemlist.append(item_factory(itemname))
         if self.type == "hero":
             self.itemlist[-1].setx(self.startX, self.stopX + ((len(self.itemlist)-1)*500))
         else:
@@ -401,7 +402,7 @@ class item_manager:
 
     def push_item_list(self, item_list):
         for i in item_list:
-            self.itemlist.append(itemfactory(i))
+            self.itemlist.append(item_factory(i))
 
             if self.type == "hero":
                 self.itemlist[-1].setx(self.startX, self.stopX + ((len(self.itemlist) - 1) * 500))
